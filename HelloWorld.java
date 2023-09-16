@@ -9,7 +9,6 @@ public class HelloWorld {
 
         try {
             InetAddress localhost = InetAddress.getLocalHost();
-            // String localhost = System.getenv(null);
             System.out.println("Hello from " + localhost.getHostName());
         } catch (UnknownHostException e) {
             System.out.println(e);
@@ -17,7 +16,7 @@ public class HelloWorld {
 
         for (int i=0; i < waitTime; i++) {
             
-            String message = String.format("The time is %d seconds", i+1);
+            String message = String.format("Time elapsed at current node is %d seconds", i+1);
             System.out.println(message);
 
             try {
