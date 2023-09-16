@@ -18,3 +18,8 @@ git clone https://xxx_ACCESS_KEY_HERE_xxx@github.com/gskpsrikar/distributed-syst
 ```
 ssh sxs210570@dc01.utdallas.edu
 ```
+
+#### "cd" into the project repository in the terminal
+```
+cd distributed-systems-project-1
+```
