@@ -9,7 +9,8 @@ public class HelloWorld {
 
         try {
             InetAddress localhost = InetAddress.getLocalHost();
-            System.out.println("Hello from " + localhost.getHostAddress());
+            // String localhost = System.getenv(null);
+            System.out.println("Hello from " + localhost.getHostName());
         } catch (UnknownHostException e) {
             System.out.println(e);
         }
@@ -24,7 +25,6 @@ public class HelloWorld {
             } catch (InterruptedException e) {
                 System.out.println(e);
             }
-        }
-        
+        }   
     }
 }
