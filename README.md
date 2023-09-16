@@ -20,6 +20,8 @@ ssh sxs210570@dc01.utdallas.edu
 ```
 
 #### "cd" into the project repository in the terminal
+*Note: Doing this because the autofill on the csjaws machine is hanging up*
+
 ```
 cd distributed-systems-project-1
 ```
