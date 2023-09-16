@@ -13,5 +13,5 @@ REMOTE_COMMANDS = ";".join([
 ])
 
 if __name__ == "__main__":
-    process_object = subprocess.run(REMOTE_COMMANDS.split())
-    
+    FINAL_COMMAND = f"{SSH_COMMAND} {REMOTE_COMMANDS}"
+    process_object = subprocess.run(FINAL_COMMAND.split())
