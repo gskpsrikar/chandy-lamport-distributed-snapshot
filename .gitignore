@@ -1,0 +1,14 @@
+# Java build and compiled files
+target/
+bin/
+.classpath
+.project
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.class

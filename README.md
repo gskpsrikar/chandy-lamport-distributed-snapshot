@@ -25,3 +25,8 @@ ssh sxs210570@dc01.utdallas.edu
 ```
 cd distributed-systems-project-1
 ```
+
+## References
+- [Cloning Private Repository from Github Using Personal Token](https://www.youtube.com/watch?v=rzgtnS04MXE)
+  - Refer this but use fine grained access feature that is provided in GitHub developer settings.
+- Socket Programming tutorials
