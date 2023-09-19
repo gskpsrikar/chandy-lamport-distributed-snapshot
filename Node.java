@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -115,5 +116,15 @@ public class Node {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> get_random_neighbor() {
+        Random random = new Random();
+        
+        int randomNumber = random.nextInt(this.neighbors.size());
+
+        List<String> chosen_neighbor = this.neighbors.get(randomNumber);
+
+        return chosen_neighbor;
     }
 }

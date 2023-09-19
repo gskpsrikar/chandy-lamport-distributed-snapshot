@@ -1,12 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 
 public class ComputeNode {
 
@@ -16,20 +14,58 @@ public class ComputeNode {
     int minSendDelay;
     int snapshotDelay;
     int maxNumber;
+    int messagesSent = 0;
+    String NETID = "sxs210570";
 
     public ComputeNode(){
         this.node = new Node();
         node.parse_configuration_file();
-
         this.parse_configuration_file();
     }
 
     public static void main(String[] args) {
-        ComputeNode computeNode = new ComputeNode();
-        computeNode.repr();
+        ComputeNode computeNode = new ComputeNode(); computeNode.repr();
+
+        send_messages_to_neighbors(computeNode);
+    }
+
+    public static void send_messages_to_neighbors(ComputeNode c) {
+        Random random = new Random();
+
+        int number_of_messages_to_send = random.nextInt(c.maxPerActive - c.minPerActive + 1) + c.minPerActive;
+
+        for (int i=0; i < number_of_messages_to_send; i++){
+
+            if (c.messagesSent == c.maxNumber) {
+                // The node should go to passive state
+            }
+
+            List<String> neighbor = c.node.get_random_neighbor();
+
+            String neighbor_name = neighbor.get(0);
+            int port = Integer.parseInt(neighbor.get(1));
+
+            try {
+                Thread.sleep(c.minSendDelay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            c.messagesSent += 1;
+
+            send_message(c.NETID, neighbor_name, port);
+        }
     }
     
+    public static void send_message(String netid, String destinationNode, int port) {
+        // TODO: Open a socket connection and send a message to a neighbor
+
+        destinationNode = String.format("%s@%s.utdallas.edu", netid, destinationNode );
+        System.out.println(destinationNode + " " + port);
+    }
+
     public void parse_configuration_file () {
+        // Wrap this function and never touch it. This is working fine.
 
         String CONFIG_FILENAME = "config.txt";
         Pattern GLOBAL_VARIABLES_REGEX_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
@@ -65,8 +101,7 @@ public class ComputeNode {
         System.out.println("------------------------ Node Details -------------------------");
         this.node.details();
         System.out.println("---------------------------- Globals --------------------------");
-        System.out.println("minPerActive: " + minPerActive);
-        System.out.println("maxPerActive: " + maxPerActive);
+        System.out.println(String.format("perActive message limit (inclusive) : [%d, %d]", minPerActive, maxPerActive));
         System.out.println("minSendDelay: " + minSendDelay);
         System.out.println("snapshotDelay: " + snapshotDelay);
         System.out.println("maxNumber: " + maxNumber);
