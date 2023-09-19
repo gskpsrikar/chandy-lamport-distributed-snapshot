@@ -13,10 +13,20 @@ import java.util.regex.Pattern;
 
 public class Node {
 
+    String NETID = "sxs210570";
+
     public String currentNodeName;
     public String listenPort;
     public List<List<String>> neighbors = new ArrayList<>();
+    
+    int minPerActive;
+    int maxPerActive;
+    int minSendDelay;
+    int snapshotDelay;
+    int maxNumber;
 
+    int messagesSent;
+    
     public Node() {
         this.currentNodeName = getHostName();
     }
@@ -32,7 +42,7 @@ public class Node {
     }
 
     public void details(){
-        System.out.println("My name is " + currentNodeName);
+        System.out.println("Current node's hostname is " + currentNodeName);
         
         int n = neighbors.size();
         String neighborString = "";
@@ -42,7 +52,7 @@ public class Node {
             neighborString +=  neighborName + "(" + listenPort + ")";
             neighborString += ", ";
         }
-        System.out.println("My neighboring nodes are: " + neighborString);
+        System.out.println("The neighboring nodes are: " + neighborString);
     }
 
     static String getHostName() {
@@ -79,6 +89,13 @@ public class Node {
 
                 if (globalMatcher.matches()) {// If the line is about global variables, ignore it
                     n = Integer.parseInt(globalMatcher.group(1));
+                    
+                    this.minPerActive = Integer.parseInt(globalMatcher.group(2));
+                    this.maxPerActive = Integer.parseInt(globalMatcher.group(3));
+                    this.minSendDelay = Integer.parseInt(globalMatcher.group(4));
+                    this.snapshotDelay = Integer.parseInt(globalMatcher.group(5));
+                    this.maxNumber = Integer.parseInt(globalMatcher.group(6));
+
                     validLineNumber += 1;
 
                 } else if (validLineNumber <= n) {
@@ -118,6 +135,17 @@ public class Node {
         }
     }
 
+    public void repr() {
+        System.out.println("------------------------ Node Details -------------------------");
+        this.details();
+        System.out.println("---------------------------- Globals --------------------------");
+        System.out.println(String.format("perActive message limit (inclusive) : [%d, %d]", minPerActive, maxPerActive));
+        System.out.println("minSendDelay: " + minSendDelay);
+        System.out.println("snapshotDelay: " + snapshotDelay);
+        System.out.println("maxNumber: " + maxNumber);
+        System.out.println("---------------------------------------------------------------");
+    }
+
     public List<String> get_random_neighbor() {
         Random random = new Random();
         
@@ -126,5 +154,40 @@ public class Node {
         List<String> chosen_neighbor = this.neighbors.get(randomNumber);
 
         return chosen_neighbor;
+    }
+
+    public void send_messages_to_neighbors() {
+        Random random = new Random();
+
+        int number_of_messages_to_send = random.nextInt(this.maxPerActive - this.minPerActive + 1) + this.minPerActive;
+
+        for (int i=0; i < number_of_messages_to_send; i++){
+
+            if (this.messagesSent == this.maxNumber) {
+                // The node should go to passive state
+            }
+
+            List<String> neighbor = this.get_random_neighbor();
+
+            String neighbor_name = neighbor.get(0);
+            int port = Integer.parseInt(neighbor.get(1));
+
+            try {
+                Thread.sleep(this.minSendDelay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            this.messagesSent += 1;
+            send_message(this.NETID, neighbor_name, port);
+        }
+    }
+
+    public static void send_message(String netid, String destinationNode, int port) {
+        // TODO: Open a socket connection and send a message to a neighbor
+        String message = String.format(
+            "[DUMMY]: Sending message to %s@%s.utdallas.edu on port %d", netid, destinationNode, port
+        );
+        System.out.println(message);
     }
 }

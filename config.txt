@@ -1,10 +1,10 @@
 5 6 10 100 2000 15
 
-0 srikargskp 1234 # This is line 1
-1 dc03 1233
-2 dc04 1233
-3 dc05 1232
-4 dc06 1233
+0 srikargskp 2222 # This is line 1
+1 dc03 3333
+2 dc04 4444
+3 dc05 5555
+4 dc06 6666
 
 1 2 3 4 # This is the adj list
 0 2 3
