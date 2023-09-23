@@ -5,8 +5,8 @@ USER = "sxs210570"
 
 REMOTE_COMMANDS = ";".join([
     "cd distributed-systems-project-1",
-    "javac HelloWorld.java",
-    "java HelloWorld",
+    "javac ComputeNode.java",
+    "java ComputeNode",
     "exit"
 ])
 

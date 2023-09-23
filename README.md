@@ -28,5 +28,6 @@ cd distributed-systems-project-1
 
 ## References
 - [Cloning Private Repository from Github Using Personal Token](https://www.youtube.com/watch?v=rzgtnS04MXE)
-  - Refer this but use fine grained access feature that is provided in GitHub developer settings.
+  - Refer this but use 'fine grained access' feature that is provided in GitHub developer settings.
 - Socket Programming tutorials
+  - [Socket Programming in Java | Client Server Architecture | Java Networking | Edureka](https://www.youtube.com/watch?v=BqBKEXLqdvI&t=686s)
