@@ -104,7 +104,10 @@ public class Node {
                     int nodeId = Integer.parseInt(nodeDetails[0]);
 
                     // (hostname, listenport)
-                    List<String> value = new ArrayList<>(); value.add(nodeDetails[1]); value.add(nodeDetails[2]);
+                    List<String> value = new ArrayList<>(); 
+                    value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
+                    value.add(nodeDetails[2]);
+
                     dictionary.put(nodeId, value);
                     validLineNumber += 1;
 
