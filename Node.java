@@ -16,7 +16,7 @@ public class Node {
     String NETID = "sxs210570";
 
     public String currentNodeName;
-    public String listenPort;
+    public String listenPort = "1234";
     public List<List<String>> neighbors = new ArrayList<>();
     
     int minPerActive;
