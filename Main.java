@@ -18,14 +18,17 @@ public class Main {
 
         Main m = new Main();
         
-        m.node.send_messages_to_neighbors();
+        // m.node.send_messages_to_neighbors();
+        System.out.println("Intiating listener");
         m.initiateListener();
+        System.out.println("Listener initiated");
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         // m.initiateSender(m);
+        System.out.println("Initiating sender");
         Sender s1 = new Sender(m);
         System.out.println("Number of channels created = " + s1.channelList.size());
     }

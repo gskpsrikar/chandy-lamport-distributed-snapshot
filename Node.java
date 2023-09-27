@@ -101,7 +101,6 @@ public class Node {
                     validLineNumber += 1;
 
                 } else if (validLineNumber <= n) {
-                    System.out.println(line);
                     String[] nodeDetails = line.split(" ");
 
                     int nodeId = Integer.parseInt(nodeDetails[0]);
