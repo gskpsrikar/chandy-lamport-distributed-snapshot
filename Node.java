@@ -101,10 +101,11 @@ public class Node {
                     validLineNumber += 1;
 
                 } else if (validLineNumber <= n) {
+                    System.out.println(line);
                     String[] nodeDetails = line.split(" ");
 
                     int nodeId = Integer.parseInt(nodeDetails[0]);
-                    
+
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
