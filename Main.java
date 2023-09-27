@@ -10,6 +10,8 @@ public class Main {
     public Main(){
         this.node = new Node();
         node.parse_configuration_file(); node.repr();
+
+        node.state = "active";
     }
 
     public static void main(String[] args) {
@@ -23,7 +25,9 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        m.initiateSender(m);
+        // m.initiateSender(m);
+        Sender s1 = new Sender(m);
+        System.out.println("Number of channels created = " + s1.channelList.size());
     }
 
     public void initiateSender(Main m) {
@@ -33,7 +37,7 @@ public class Main {
                 Sender s1 = new Sender(m);
                 try {
                     s1.sendLogic();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             };

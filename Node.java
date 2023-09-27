@@ -26,6 +26,8 @@ public class Node {
     int maxNumber;
 
     int messagesSent;
+
+    String state;
     
     public Node() {
         this.currentNodeName = getHostName();
@@ -102,7 +104,7 @@ public class Node {
                     String[] nodeDetails = line.split(" ");
 
                     int nodeId = Integer.parseInt(nodeDetails[0]);
-
+                    
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
@@ -188,6 +190,7 @@ public class Node {
 
     public static void send_message(String netid, String destinationNode, int port) {
         // TODO: Open a socket connection and send a message to a neighbor
+        
         String message = String.format(
             "[DUMMY]: Sending message to %s@%s.utdallas.edu on port %d", netid, destinationNode, port
         );
