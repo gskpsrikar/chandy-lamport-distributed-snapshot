@@ -26,6 +26,8 @@ public class Listener {
                     ByteBuffer buf = ByteBuffer.allocateDirect(MAX_MSG_SIZE);
                     String messageString = "NULL";
 
+                    int c = 10;
+
                     while (sc.isOpen()){
                         try {
                             // TODO: Implement application logic on reveived message
@@ -33,6 +35,8 @@ public class Listener {
                             
                             Message msg = Message.fromByteBuffer(buf);
                             messageString = msg.message;
+
+                            System.out.println("Message received from client: " + messageString);
 
                             if (messageString == null) {
                                 System.out.println("'null' message received: Socket Connection closed!");
@@ -42,7 +46,11 @@ public class Listener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Message received from client: " + messageString);
+
+                        if (c <= 0) {
+                            break;
+                        }
+                        
                     }
                 }
             };
