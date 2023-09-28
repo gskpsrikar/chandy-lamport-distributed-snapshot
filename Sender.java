@@ -47,7 +47,6 @@ public class Sender {
                 break;
             }
             if (m.node.state.equals("active")){
-                System.out.println("Entering sendLogic() active");
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
                 send_message(number_of_messages_to_send);
@@ -64,6 +63,7 @@ public class Sender {
     }
 
     public void send_message(int count) throws Exception{
+        System.out.println(String.format("Sending a batch of %d messages", count));
         Random random = new Random();
 
         for (int i=0; i<count; i++){
@@ -75,6 +75,10 @@ public class Sender {
 
             int randomNumber = random.nextInt(this.channelList.size());
             SctpChannel channel = channelList.get(randomNumber);
+
+            synchronized (m) {
+                m.node.messagesSent ++;
+            }
             
             String messageString = String.format(
                 "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent, m.node.maxNumber
@@ -86,13 +90,12 @@ public class Sender {
             
             channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
 
-            synchronized (m) {
-                m.node.messagesSent ++;
-            }
+            
 
             try {
                 Thread.sleep(m.node.minSendDelay);
-                System.out.println("Delaying sending messages for" + m.node.minSendDelay/1000 + " seconds");
+                System.out.println(String.format("Delaying sending messages for %.3f seconds", m.node.minSendDelay/1000));
+                System.out.println();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
