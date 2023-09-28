@@ -94,7 +94,8 @@ public class Sender {
 
             try {
                 Thread.sleep(m.node.minSendDelay);
-                System.out.println(String.format("Delaying sending messages for %.3f seconds", m.node.minSendDelay/1000));
+                float delayTime = m.node.minSendDelay/1000;
+                System.out.println(String.format("Delaying sending messages for %.3f seconds", delayTime));
                 System.out.println();
             } catch (InterruptedException e) {
                 e.printStackTrace();
