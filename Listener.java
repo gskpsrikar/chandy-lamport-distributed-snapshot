@@ -31,7 +31,7 @@ public class Listener {
                             Message msg = Message.fromByteBuffer(buf);
                             messageString = msg.message;
 
-                            System.out.println("Received message text: " + messageString);
+                            System.out.println("[Received message text] : " + messageString);
 
                         } catch (Exception e) {
                             e.printStackTrace();
