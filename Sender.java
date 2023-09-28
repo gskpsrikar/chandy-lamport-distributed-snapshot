@@ -4,8 +4,7 @@ import java.util.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
+
 
 public class Sender {
 
@@ -71,15 +70,17 @@ public class Sender {
 
             if (m.node.messagesSent >= m.node.maxNumber){
                 m.node.state = "passive";
+                break;
             }
 
             int randomNumber = random.nextInt(this.channelList.size());
             SctpChannel channel = channelList.get(randomNumber);
             
-            // TODO: Create and use the Message object
-            Message msg = new Message("Sending from " + m.node.currentNodeName);
+            String messageString = String.format(
+                "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent, m.node.maxNumber
+            );
+            Message msg = new Message(messageString);
             
-            // Create a message info object to specify destination address and stream ID
 		    MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
             byte[] messageBytes = msg.toMessageBytes();
             
@@ -91,11 +92,10 @@ public class Sender {
 
             try {
                 Thread.sleep(m.node.minSendDelay);
-                System.out.println("Resumed after 2 seconds");
+                System.out.println("Delaying sending messages for" + m.node.minSendDelay/1000 + " seconds");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

@@ -1,8 +1,7 @@
 import com.sun.nio.sctp.*;
-
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+
 
 public class Listener {
     private int port;
@@ -24,21 +23,15 @@ public class Listener {
             Thread listener = new Thread() {
                 public void run(){
                     ByteBuffer buf = ByteBuffer.allocateDirect(MAX_MSG_SIZE);
-                    String messageString = "NULL";
+                    String messageString = "--------";
                     while (sc.isOpen()){
                         try {
-                            // TODO: Implement application logic on reveived message
                             sc.receive(buf, null, null);
                             
                             Message msg = Message.fromByteBuffer(buf);
                             messageString = msg.message;
 
-                            System.out.println("Message received from client: " + messageString);
-
-                            if (messageString == null) {
-                                System.out.println("'null' message received: Socket Connection closed!");
-                                sc.close();
-                            }
+                            System.out.println("Received message text: " + messageString);
 
                         } catch (Exception e) {
                             e.printStackTrace();

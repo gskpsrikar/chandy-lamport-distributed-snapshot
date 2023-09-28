@@ -16,7 +16,6 @@ public class Main {
     public static void main(String[] args) {
 
         Main m = new Main();
-        // m.node.send_messages_to_neighbors();
 
         m.initiateListener();
         
