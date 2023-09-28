@@ -12,9 +12,10 @@ public class Sender {
     public List<SctpChannel> channelList;
     public Main m;
 
-    public Sender(Main m){
+    public Sender(Main m) throws Exception{
         this.m = m;
         this.channelList = buildChannels(m.node);
+        // sendLogic();
     }
 
     private List<SctpChannel> buildChannels(Node node) {
@@ -31,7 +32,6 @@ public class Sender {
                     new InetSocketAddress(neighbor_name, port)
                 );
                 channelList.add(clientChannel);
-                // clientChannel.
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,18 +43,25 @@ public class Sender {
 
     public void sendLogic() throws Exception {
         while (true) {
-            if (m.node.state.equals("passive")){
+            if (m.node.messagesSent >= m.node.maxNumber){
+                System.out.println("Node sent maximum number of messages. Going permanently passive");
+                break;
+            }
+            if (m.node.state.equals("active")){
+                System.out.println("Entering sendLogic() active");
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
                 send_message(number_of_messages_to_send);
-            } else {
+            }
+            else {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }
+        };
+        System.out.println("Exiting sendLogic() while(true) loop.");
     }
 
     public void send_message(int count) throws Exception{

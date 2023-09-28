@@ -22,7 +22,7 @@ public class Main {
         
         try {
             System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -34,8 +34,8 @@ public class Main {
         System.out.println("Intiating sender(client) thread...");
         Thread sender = new Thread() {
             public void run() {
-                Sender s1 = new Sender(m);
                 try {
+                    Sender s1 = new Sender(m);
                     s1.sendLogic();
                 } catch (Exception e) {
                     e.printStackTrace();

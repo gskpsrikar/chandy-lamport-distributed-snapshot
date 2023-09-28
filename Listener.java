@@ -25,9 +25,6 @@ public class Listener {
                 public void run(){
                     ByteBuffer buf = ByteBuffer.allocateDirect(MAX_MSG_SIZE);
                     String messageString = "NULL";
-
-                    int c = 10;
-
                     while (sc.isOpen()){
                         try {
                             // TODO: Implement application logic on reveived message
@@ -45,12 +42,8 @@ public class Listener {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
-
-                        if (c <= 0) {
                             break;
-                        }
-                        
+                        };
                     }
                 }
             };
