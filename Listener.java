@@ -24,14 +24,25 @@ public class Listener {
             Thread listener = new Thread() {
                 public void run(){
                     ByteBuffer buf = ByteBuffer.allocateDirect(MAX_MSG_SIZE);
+                    String messageString = "NULL";
+
                     while (sc.isOpen()){
                         try {
                             // TODO: Implement application logic on reveived message
                             sc.receive(buf, null, null);
-                        } catch (IOException e) {
+                            
+                            Message msg = Message.fromByteBuffer(buf);
+                            messageString = msg.message;
+
+                            if (messageString == null) {
+                                System.out.println("'null' message received: Socket Connection closed!");
+                                sc.close();
+                            }
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Message received from client: ");
+                        System.out.println("Message received from client: " + messageString);
                     }
                 }
             };

@@ -18,6 +18,7 @@ public class Sender {
     }
 
     private List<SctpChannel> buildChannels(Node node) {
+        System.out.println("Creating channels for neighboring nodes....");
         List<SctpChannel> channelList = new ArrayList<>();
 
         for (List<String> neighbor: node.neighbors) {
@@ -27,14 +28,16 @@ public class Sender {
             try {
                 SctpChannel clientChannel = SctpChannel.open();
                 clientChannel.connect(
-                    new InetSocketAddress("sxs210570@"+neighbor_name, port)
+                    new InetSocketAddress(neighbor_name, port)
                 );
                 channelList.add(clientChannel);
+                // clientChannel.
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println("Number of channels created = " + channelList.size());
         return channelList;
     }
 

@@ -10,31 +10,28 @@ public class Main {
     public Main(){
         this.node = new Node();
         node.parse_configuration_file(); node.repr();
-
         node.state = "active";
     }
 
     public static void main(String[] args) {
 
         Main m = new Main();
-        
         // m.node.send_messages_to_neighbors();
-        System.out.println("Intiating listener");
+
         m.initiateListener();
-        System.out.println("Listener initiated");
+        
         try {
+            System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // m.initiateSender(m);
-        System.out.println("Initiating sender");
-        Sender s1 = new Sender(m);
-        System.out.println("Number of channels created = " + s1.channelList.size());
+        
+        m.initiateSender(m);
     }
 
     public void initiateSender(Main m) {
-
+        System.out.println("Intiating sender(client) thread...");
         Thread sender = new Thread() {
             public void run() {
                 Sender s1 = new Sender(m);
@@ -46,21 +43,22 @@ public class Main {
             };
         };
         sender.start();
+        System.out.println("Sender(client) initiated");
     }
 
     private void initiateListener() {
+        System.out.println("Intiating listener(server) thread...");
         Thread listener = new Thread() {
             public void run() {
                 Listener listenerObject = new Listener(Integer.parseInt(node.listenPort));
                 try {
                     listenerObject.listen();
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             };
         };
         listener.start();
+        System.out.println("Listener(server) initiated");
     }
-
 }
