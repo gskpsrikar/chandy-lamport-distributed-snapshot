@@ -6,8 +6,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,9 +16,11 @@ public class Node {
     String NETID = "sxs210570";
 
     public String currentNodeName;
+    public int nodeId;
     public String listenPort = "1234";
     public List<List<String>> neighbors = new ArrayList<>();
     
+    int numberOfNodes;
     int minPerActive;
     int maxPerActive;
     int minSendDelay;
@@ -28,9 +30,12 @@ public class Node {
     int messagesSent;
 
     String state;
+
+    public Vector<Integer> timestamp;
     
     public Node() {
         this.currentNodeName = getHostName();
+        this.timestamp = initiateVectorClock();
     }
 
     public static void main(String[] args){
@@ -44,7 +49,8 @@ public class Node {
     }
 
     public void details(){
-        System.out.println("Current node's hostname is " + currentNodeName);
+        System.out.println("Current node is " + currentNodeName);
+        System.out.println("Cuurent node number is " + nodeId);
         
         int n = neighbors.size();
         String neighborString = "";
@@ -58,7 +64,6 @@ public class Node {
     }
 
     static String getHostName() {
-        // Get the name of the current host
         String localhost = "";
         try {
             localhost = InetAddress.getLocalHost().getHostName();
@@ -91,6 +96,8 @@ public class Node {
 
                 if (globalMatcher.matches()) {// If the line is about global variables, ignore it
                     n = Integer.parseInt(globalMatcher.group(1));
+
+                    numberOfNodes = n;
                     
                     this.minPerActive = Integer.parseInt(globalMatcher.group(2));
                     this.maxPerActive = Integer.parseInt(globalMatcher.group(3));
@@ -104,10 +111,12 @@ public class Node {
                     String[] nodeDetails = line.split(" ");
 
                     int nodeId = Integer.parseInt(nodeDetails[0]);
+                    this.nodeId = nodeId;
 
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
+                    value.add(nodeDetails[1]);
                     value.add(nodeDetails[2]);
 
                     dictionary.put(nodeId, value);
@@ -128,7 +137,6 @@ public class Node {
                             
                             int p = Integer.parseInt(neighborNodes[i]);
                             this.addNeighbors(dictionary.get(p));
-                        
                         }
                     }
                     validLineNumber += 1;
@@ -151,52 +159,6 @@ public class Node {
         System.out.println("---------------------------------------------------------------");
     }
 
-    public List<String> get_random_neighbor() {
-        Random random = new Random();
-        
-        int randomNumber = random.nextInt(this.neighbors.size());
-
-        List<String> chosen_neighbor = this.neighbors.get(randomNumber);
-
-        return chosen_neighbor;
-    }
-
-    public void send_messages_to_neighbors() {
-        Random random = new Random();
-
-        int number_of_messages_to_send = random.nextInt(this.maxPerActive - this.minPerActive + 1) + this.minPerActive;
-
-        for (int i=0; i < number_of_messages_to_send; i++){
-
-            if (this.messagesSent == this.maxNumber) {
-                // The node should go to passive state
-            }
-
-            List<String> neighbor = this.get_random_neighbor();
-
-            String neighbor_name = neighbor.get(0);
-            int port = Integer.parseInt(neighbor.get(1));
-
-            try {
-                Thread.sleep(this.minSendDelay);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            this.messagesSent += 1;
-            send_message(this.NETID, neighbor_name, port);
-        }
-    }
-
-    public static void send_message(String netid, String destinationNode, int port) {
-        // TODO: Open a socket connection and send a message to a neighbor
-        
-        String message = String.format(
-            "[DUMMY]: Sending message to %s@%s.utdallas.edu on port %d", netid, destinationNode, port
-        );
-        System.out.println(message);
-    }
-
     public void flipState() {
         if (this.state.equals("active")) {
             this.state = "passive";
@@ -204,5 +166,15 @@ public class Node {
         else {
             this.state = "active";
         }
+    }
+
+    private Vector<Integer> initiateVectorClock() {
+        Vector<Integer> zeroTimestamp = new Vector<>();
+        for (int i=0; i < numberOfNodes; i++){
+            zeroTimestamp.add(0);
+        }
+        return zeroTimestamp;
+        // integerVector.set(indexToUpdate, newValue);
+        // int valueAtIndex = integerVector.get(indexToGet);
     }
 }

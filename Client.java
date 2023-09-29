@@ -6,12 +6,12 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 
-public class Sender {
+public class Client {
 
     public List<SctpChannel> channelList;
     public Main m;
 
-    public Sender(Main m) throws Exception{
+    public Client(Main m) throws Exception{
         this.m = m;
         this.channelList = buildChannels(m.node);
     }
@@ -84,7 +84,7 @@ public class Sender {
             String messageString = String.format(
                 "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent, m.node.maxNumber
             );
-            Message msg = new Message(messageString);
+            Message msg = new Message(messageString, m.node.nodeId, m.node.timestamp);
             
 		    MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
             byte[] messageBytes = msg.toMessageBytes();

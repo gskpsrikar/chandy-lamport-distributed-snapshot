@@ -1,15 +1,11 @@
-import com.sun.nio.sctp.*;
-
-import java.io.IOException;
-import java.util.List;
-
 public class Main {
 
     Node node;
 
     public Main(){
         this.node = new Node();
-        node.parse_configuration_file(); node.repr();
+        node.parse_configuration_file();
+        node.repr();
         node.state = "active";
     }
 
@@ -34,7 +30,7 @@ public class Main {
         Thread sender = new Thread() {
             public void run() {
                 try {
-                    Sender s1 = new Sender(m);
+                    Client s1 = new Client(m);
                     s1.sendLogic();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -49,7 +45,7 @@ public class Main {
         System.out.println("Intiating listener(server) thread...");
         Thread listener = new Thread() {
             public void run() {
-                Listener listenerObject = new Listener(m);
+                Server listenerObject = new Server(m);
                 try {
                     listenerObject.listen();
                 } catch (Exception e) {

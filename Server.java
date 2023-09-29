@@ -3,12 +3,12 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 
-public class Listener {
+public class Server {
     private int port;
     private int MAX_MSG_SIZE = 4096;
     private Main m;
 
-    public Listener(Main m) {
+    public Server(Main m) {
         this.port = Integer.parseInt(m.node.listenPort);
         this.m = m;
     }
@@ -56,7 +56,5 @@ public class Listener {
 
     public static void logReceiveEvent(Message msg) {
         // TODO: Do operations that needs to be done on receiving a messsage.
-    }
-
-    
+    }   
 }

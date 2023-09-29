@@ -1,22 +1,24 @@
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.Vector;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import com.sun.nio.sctp.*;
-import com.sun.nio.sctp.MessageInfo;
-
 public class Message implements Serializable 
 {
 	// MessageType msgType;
 	public String message;
+	public Vector<Integer> timestamp;
+	public int senderId;
 
-	public Message(String msg)
+	public Message(String message, int senderId, Vector<Integer> timestamp)
 	{
 		// msgType = MessageType.string;
-		message = msg;
+		this.message = message;
+		this.timestamp = timestamp;
+		this.senderId = senderId;
 	}
 
 	// Convert current instance of Message to ByteBuffer in order to send message over SCTP
@@ -48,6 +50,5 @@ public class Message implements Serializable
 		ois.close();
 
 		return msg;
-	}
-	
+	};
 }
