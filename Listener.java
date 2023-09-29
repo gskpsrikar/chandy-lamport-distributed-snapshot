@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 public class Listener {
     private int port;
     private int MAX_MSG_SIZE = 4096;
+    private Main m;
 
-    public Listener(int port) {
-        this.port = port;
+    public Listener(Main m) {
+        this.port = Integer.parseInt(m.node.listenPort);
+        this.m = m;
     }
 
     public void listen() throws Exception {
@@ -23,15 +25,13 @@ public class Listener {
             Thread listener = new Thread() {
                 public void run(){
                     ByteBuffer buf = ByteBuffer.allocateDirect(MAX_MSG_SIZE);
-                    String messageString = "--------";
                     while (sc.isOpen()){
                         try {
                             sc.receive(buf, null, null);
-                            
                             Message msg = Message.fromByteBuffer(buf);
-                            messageString = msg.message;
 
-                            System.out.println("[Received message text] : " + messageString);
+                            System.out.println("[Received message text] : " + msg.message);
+                            wakeNodeIfPassive(msg);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -40,8 +40,23 @@ public class Listener {
                     }
                 }
             };
-
             listener.start();
         }
     }
+
+    public void wakeNodeIfPassive(Message msg) {
+        // TODO: The node wakes up based on message length. Make this more reliable.
+        if (m.node.state.equals("passive")){
+            if (msg.message.length() > 0) {
+                m.node.flipState();
+                System.out.println("Node changed from active to passive state");
+            }
+        }
+    }
+
+    public static void logReceiveEvent(Message msg) {
+        // TODO: Do operations that needs to be done on receiving a messsage.
+    }
+
+    
 }

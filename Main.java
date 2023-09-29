@@ -17,7 +17,7 @@ public class Main {
 
         Main m = new Main();
 
-        m.initiateListener();
+        m.initiateListener(m);
         
         try {
             System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
@@ -45,11 +45,11 @@ public class Main {
         System.out.println("Sender(client) initiated");
     }
 
-    private void initiateListener() {
+    private void initiateListener(Main m) {
         System.out.println("Intiating listener(server) thread...");
         Thread listener = new Thread() {
             public void run() {
-                Listener listenerObject = new Listener(Integer.parseInt(node.listenPort));
+                Listener listenerObject = new Listener(m);
                 try {
                     listenerObject.listen();
                 } catch (Exception e) {

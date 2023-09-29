@@ -14,7 +14,6 @@ public class Sender {
     public Sender(Main m) throws Exception{
         this.m = m;
         this.channelList = buildChannels(m.node);
-        // sendLogic();
     }
 
     private List<SctpChannel> buildChannels(Node node) {
@@ -43,9 +42,10 @@ public class Sender {
     public void sendLogic() throws Exception {
         while (true) {
             if (m.node.messagesSent >= m.node.maxNumber){
-                System.out.println("Node sent maximum number of messages. Going permanently passive");
+                System.out.println("[TERMINATION] Node sent maximum number of messages. Going permanently passive");
                 break;
             }
+
             if (m.node.state.equals("active")){
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
@@ -53,13 +53,14 @@ public class Sender {
             }
             else {
                 try {
+                    System.out.println("Node is temporarily passive");
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         };
-        System.out.println("Exiting sendLogic() while(true) loop.");
+        System.out.println("Exiting sendLogic() method.");
     }
 
     public void send_message(int count) throws Exception{
@@ -90,8 +91,6 @@ public class Sender {
             
             channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
 
-            
-
             try {
                 Thread.sleep(m.node.minSendDelay);
                 System.out.println(String.format("Delaying sending messages for %d milliseconds", m.node.minSendDelay));
@@ -100,5 +99,7 @@ public class Sender {
                 e.printStackTrace();
             }
         }
+        System.out.println("[STATE CHANGE] Flipping node state from active to passive because a batch of messages are sent to neighbors.");
+        m.node.flipState();
     }
 }

@@ -196,4 +196,13 @@ public class Node {
         );
         System.out.println(message);
     }
+
+    public void flipState() {
+        if (this.state.equals("active")) {
+            this.state = "passive";
+        }
+        else {
+            this.state = "active";
+        }
+    }
 }
