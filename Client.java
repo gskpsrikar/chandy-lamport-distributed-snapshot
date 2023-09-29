@@ -53,8 +53,8 @@ public class Client {
             }
             else {
                 try {
-                    System.out.println("Node is temporarily passive");
-                    Thread.sleep(1000);
+                    System.out.println(String.format("Node is temporarily passive (Messages sent: [%d/%d]", m.node.messagesSent, m.node.maxNumber));
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

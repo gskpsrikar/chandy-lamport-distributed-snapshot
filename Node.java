@@ -76,7 +76,7 @@ public class Node {
     public void parse_configuration_file () {
 
         String CONFIG_FILENAME = "distributed-systems-project-1/config.txt";
-        
+
         Pattern GLOBAL_VARIABLES_REGEX_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILENAME))) {
@@ -117,7 +117,6 @@ public class Node {
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
-                    value.add(nodeDetails[1]);
                     value.add(nodeDetails[2]);
 
                     dictionary.put(nodeId, value);
