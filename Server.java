@@ -30,7 +30,10 @@ public class Server {
                             sc.receive(buf, null, null);
                             Message msg = Message.fromByteBuffer(buf);
 
+                            handleMessage(msg);
+
                             System.out.println("[Received message text] : " + msg.message);
+                            
                             wakeNodeIfPassive(msg);
 
                         } catch (Exception e) {
@@ -54,7 +57,22 @@ public class Server {
         }
     }
 
-    public static void logReceiveEvent(Message msg) {
+    public void handleMessage(Message msg){
+
+        if (msg.messageType == MessageType.APPLICATION){
+            handleApplicationMessage(msg);
+        };
+
+        if (msg.messageType == MessageType.MARKER){
+            handleMarkerMessage(msg);
+        }
+    }
+
+    public void handleApplicationMessage(Message msg) {
         // TODO: Do operations that needs to be done on receiving a messsage.
     }   
+
+    public void handleMarkerMessage(Message msg) {
+        // TODO: Do operations that needs to be done on receiving a messsage.
+    }
 }
