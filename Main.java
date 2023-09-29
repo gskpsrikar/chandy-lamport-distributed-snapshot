@@ -13,16 +13,16 @@ public class Main {
 
         Main m = new Main();
 
-        // m.initiateListener(m);
+        m.initiateListener(m);
         
-        // try {
-        //     System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
-        //     Thread.sleep(5000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         
-        // m.initiateSender(m);
+        m.initiateSender(m);
     }
 
     public void initiateSender(Main m) {

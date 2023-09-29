@@ -75,7 +75,8 @@ public class Node {
 
     public void parse_configuration_file () {
 
-        String CONFIG_FILENAME = "config.txt";
+        String CONFIG_FILENAME = "distributed-systems-project-1/config.txt";
+        
         Pattern GLOBAL_VARIABLES_REGEX_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILENAME))) {
