@@ -31,11 +31,11 @@ public class Node {
 
     String state;
 
-    public Vector<Integer> timestamp;
+    public Vector<Integer> clock;
     
     public Node() {
         this.currentNodeName = getHostName();
-        this.timestamp = initiateVectorClock();
+        initiateVectorClock();
     }
 
     public static void main(String[] args){
@@ -168,12 +168,10 @@ public class Node {
         }
     }
 
-    private Vector<Integer> initiateVectorClock() {
-        Vector<Integer> zeroTimestamp = new Vector<>();
+    private void initiateVectorClock() {
         for (int i=0; i < numberOfNodes; i++){
-            zeroTimestamp.add(0);
+            this.clock.add(0);
         }
-        return zeroTimestamp;
         // integerVector.set(indexToUpdate, newValue);
         // int valueAtIndex = integerVector.get(indexToGet);
     }

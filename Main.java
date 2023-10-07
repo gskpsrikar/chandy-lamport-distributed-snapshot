@@ -31,7 +31,7 @@ public class Main {
             public void run() {
                 try {
                     Client s1 = new Client(m);
-                    s1.sendLogic();
+                    s1.sendApplicationMessageLogic();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -69,7 +69,14 @@ public class Server {
     }
 
     public void handleApplicationMessage(Message msg) {
-        // TODO: Do operations that needs to be done on receiving a messsage.
+        // This method updates the vector clock on receiving an application message
+        synchronized (m) {
+            for (int i=0; i<m.node.numberOfNodes; i++){
+                int value = Math.max(m.node.clock.get(i), msg.timestamp.get(i));
+                m.node.clock.set(i, value);
+            }
+            System.out.println("Vector clock on receveing: "+ m.node.clock);
+        }
     }   
 
     public void handleMarkerMessage(Message msg) {

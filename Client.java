@@ -39,7 +39,7 @@ public class Client {
         return channelList;
     }
 
-    public void sendLogic() throws Exception {
+    public void sendApplicationMessageLogic() throws Exception {
         while (true) {
             if (m.node.messagesSent >= m.node.maxNumber){
                 System.out.println("[TERMINATION] Node sent maximum number of messages. Going permanently passive");
@@ -49,7 +49,7 @@ public class Client {
             if (m.node.state.equals("active")){
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
-                send_message(number_of_messages_to_send);
+                send_application_messages(number_of_messages_to_send);
             }
             else {
                 try {
@@ -63,7 +63,9 @@ public class Client {
         System.out.println("Exiting sendLogic() method.");
     }
 
-    public void send_message(int count) throws Exception{
+    public void send_application_messages(int count) throws Exception{
+        
+        // This method sends 'count' number of messages to a randomly chosen neighbor
         System.out.println(String.format("Sending a batch of %d messages", count));
         Random random = new Random();
 
@@ -76,20 +78,15 @@ public class Client {
 
             int randomNumber = random.nextInt(this.channelList.size());
             SctpChannel channel = channelList.get(randomNumber);
-
-            synchronized (m) {
-                m.node.messagesSent ++;
-            }
             
             String messageString = String.format(
-                "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent, m.node.maxNumber
+                "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent+1, m.node.maxNumber
             );
-            Message msg = new Message(messageString, m.node.nodeId, m.node.timestamp);
+            Message msg = new Message(messageString, m.node.nodeId, m.node.clock);
             
-		    MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
-            byte[] messageBytes = msg.toMessageBytes();
-            
-            channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
+            synchronized (m){ // This block increments the value of vector clock after sending a message
+                Client.send_message(msg, channel, m);
+            }
 
             try {
                 Thread.sleep(m.node.minSendDelay);
@@ -101,5 +98,22 @@ public class Client {
         }
         System.out.println("[STATE CHANGE] Flipping node state from active to passive because a batch of messages are sent to neighbors.");
         m.node.flipState();
+    }
+
+    public static void send_message(Message msg, SctpChannel channel, Main m) throws Exception {
+        
+        // This static method sends a message.
+        //  If the message is APPLICATION type, update the vector clock.
+        MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
+        byte[] messageBytes = msg.toMessageBytes();
+        
+        channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
+
+        if (msg.messageType == MessageType.APPLICATION){
+            int prevEntry = m.node.clock.get(m.node.nodeId);
+            m.node.clock.set(m.node.nodeId, prevEntry+1);
+            m.node.messagesSent ++;
+        }
+
     }
 }
