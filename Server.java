@@ -77,7 +77,7 @@ public class Server {
             }
             System.out.println("Vector clock on receveing: "+ m.node.clock);
         }
-    }   
+    }
 
     public void handleMarkerMessage(Message msg) {
         // TODO: Do operations that needs to be done on receiving a messsage.

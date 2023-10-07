@@ -1,3 +1,5 @@
+import javax.sound.midi.Soundbank;
+
 public class Main {
 
     Node node;
@@ -13,7 +15,10 @@ public class Main {
 
         Main m = new Main();
 
-        m.initiateListener(m);
+        System.out.println(m.node.clock);
+        System.out.println(m.node.nodeId);
+
+        // m.initiateListener(m);
         
         try {
             System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
@@ -22,7 +27,7 @@ public class Main {
             e.printStackTrace();
         }
         
-        m.initiateSender(m);
+        // m.initiateSender(m);
     }
 
     public void initiateSender(Main m) {
