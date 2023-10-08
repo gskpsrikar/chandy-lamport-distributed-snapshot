@@ -17,7 +17,7 @@ public class Main {
         System.out.println(m.node.clock);
         System.out.println(m.node.nodeId);
 
-        // m.initiateListener(m);
+        m.initiateListener(m);
         
         try {
             System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
@@ -26,7 +26,7 @@ public class Main {
             e.printStackTrace();
         }
         
-        // m.initiateSender(m);
+        m.initiateSender(m);
     }
 
     public void initiateSender(Main m) {

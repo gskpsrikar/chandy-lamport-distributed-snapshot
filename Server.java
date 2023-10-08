@@ -17,11 +17,8 @@ public class Server {
         InetSocketAddress address = new InetSocketAddress(port);
         SctpServerChannel ssc = SctpServerChannel.open();
 
-        try {
-            ssc.bind(address);
-        } catch (Exception e) {
-            
-        }
+        ssc.bind(address);
+        
         while(true) { // ssc.isOpen() is equivalent to 'true' in this case
             SctpChannel sc = ssc.accept();
             System.out.println("Client Connected");
