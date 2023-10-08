@@ -1,5 +1,3 @@
-import javax.sound.midi.Soundbank;
-
 public class Main {
 
     Node node;
@@ -7,6 +5,7 @@ public class Main {
     public Main(){
         this.node = new Node();
         node.parse_configuration_file();
+        node.initiateVectorClock();
         node.repr();
         node.state = "active";
     }

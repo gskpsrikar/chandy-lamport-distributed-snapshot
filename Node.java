@@ -31,17 +31,16 @@ public class Node {
 
     String state;
 
-    public Vector<Integer> clock;
+    public Vector<Integer> clock = new Vector<>();
     
     public Node() {
         this.currentNodeName = getHostName();
-        initiateVectorClock();
     }
 
     public static void main(String[] args){
-        Node node = new Node();
-        node.parse_configuration_file();
-        node.details();
+        // Node node = new Node();
+        // node.parse_configuration_file();
+        // node.details();
     }
 
     public void addNeighbors(List<String> neighbor){
@@ -168,7 +167,7 @@ public class Node {
         }
     }
 
-    private void initiateVectorClock() {
+    public void initiateVectorClock() {
         for (int i=0; i < numberOfNodes; i++){
             this.clock.add(0);
         }

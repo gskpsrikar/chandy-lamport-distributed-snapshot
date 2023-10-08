@@ -4,13 +4,13 @@
 # Command to grant permission to file to run [RUN THIS]: chmod +x cleanup.sh
 
 # Change this to your netid [CHANGE THIS]
-netid=jef180001
+netid=sxs210570
 
 # Root directory of project [CHANGE THIS]
-PROJDIR=/home/011/j/je/jef180001/distOs/project0
+PROJDIR=/home/011/s/sx/sxs210570/distributed-systems-project-1
 
 # Directory where the config file is located on your local system [CHANGE THIS]
-CONFIGLOCAL=/home/011/j/je/jef180001/distOs/project0/config.txt
+CONFIGLOCAL=/home/011/s/sx/sxs210570/distributed-systems-project-1/config.txt
 
 # extension for hosts [CHANGE THIS if using a different host system (setting to "" should suffice)]
 hostExtension="utdallas.edu"
@@ -43,8 +43,8 @@ cat $CONFIGLOCAL | sed -e "s/#.*//" | sed -e "/^\s*$/d" | sed -e "s/\r$//" |
      
         # issue command
         echo issued command: -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $netid@$host killall -u $netid" &
-        #gnome-terminal -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $netid@$host killall -u $netid" &
-        # sleep 1
+        gnome-terminal -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $netid@$host killall -u $netid" &
+        sleep 1
 
         # increment loop counter
         n=$(( n + 1 ))
