@@ -38,9 +38,9 @@ public class Node {
     }
 
     public static void main(String[] args){
-        // Node node = new Node();
-        // node.parse_configuration_file();
-        // node.details();
+        Node node = new Node();
+        node.parse_configuration_file();
+        node.details();
     }
 
     public void addNeighbors(List<String> neighbor){
@@ -75,6 +75,7 @@ public class Node {
     public void parse_configuration_file () {
 
         String CONFIG_FILENAME = "distributed-systems-project-1/config.txt";
+        // CONFIG_FILENAME = "config.txt";
 
         Pattern GLOBAL_VARIABLES_REGEX_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 
@@ -109,19 +110,17 @@ public class Node {
 
                 } else if (validLineNumber <= n) {
                     String[] nodeDetails = line.split(" ");
-                    
+                    System.out.println(this.currentNodeName + " " + nodeDetails[1] + " " + this.currentNodeName.equals(nodeDetails[1]));
                     if (this.currentNodeName.equals(nodeDetails[1]+".utdallas.edu")){
-                        int nodeId = Integer.parseInt(nodeDetails[0]);
-                        this.nodeId = nodeId;
+                        this.nodeId = Integer.parseInt(nodeDetails[0]);
                     }
-                    
 
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
                     value.add(nodeDetails[2]);
 
-                    dictionary.put(nodeId, value);
+                    dictionary.put(Integer.parseInt(nodeDetails[0]), value);
                     validLineNumber += 1;
 
                 } else {
