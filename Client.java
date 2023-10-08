@@ -115,12 +115,11 @@ public class Client {
             System.out.println("[DEBUG] Sending application message");
 
             int prevEntry = m.node.clock.get(m.node.nodeId);
-
-            System.out.println(m.node.messagesSent +" Before sending: " + m.node.clock);
-            
+            System.out.println(String.format("[DEBUG][Node:%d] (%d) Before sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
+                        
             m.node.clock.set(m.node.nodeId, prevEntry+1);
 
-            System.out.println(m.node.messagesSent + " After sending: " + m.node.clock);
+            System.out.println(String.format("[DEBUG][Node:%d] (%d) After sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
 
             m.node.messagesSent ++;
         }
