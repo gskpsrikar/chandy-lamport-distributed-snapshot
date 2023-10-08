@@ -50,7 +50,7 @@ public class Server {
 
     public void wakeNodeIfPassive(Message msg) {
         // TODO: The node wakes up based on message length. Make this more reliable.
-        if (m.node.state.equals("passive")){
+        if (m.node.state == NodeState.PASSIVE){
             if (msg.message.length() > 0) {
                 m.node.flipState();
                 System.out.println("Node changed from active to passive state");

@@ -46,7 +46,7 @@ public class Client {
                 break;
             }
 
-            if (m.node.state == NodeState.PASSIVE){
+            if (m.node.state == NodeState.ACTIVE){
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
                 sendBatchMessages(number_of_messages_to_send);
