@@ -12,7 +12,7 @@ public class Message implements Serializable
 {
 	public MessageType messageType;
 	public String message;
-	public Vector<Integer> timestamp;
+	public Vector<Integer> clock;
 	public int senderId;
 
 	public Message(String message, int senderId, Vector<Integer> timestamp)
@@ -20,7 +20,7 @@ public class Message implements Serializable
 		// Contructor for application message
 		this.messageType = MessageType.APPLICATION;
 		this.message = message;
-		this.timestamp = timestamp;
+		this.clock = timestamp;
 		this.senderId = senderId;
 	}
 

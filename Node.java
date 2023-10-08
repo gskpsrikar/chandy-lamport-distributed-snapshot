@@ -109,9 +109,12 @@ public class Node {
 
                 } else if (validLineNumber <= n) {
                     String[] nodeDetails = line.split(" ");
-
-                    int nodeId = Integer.parseInt(nodeDetails[0]);
-                    this.nodeId = nodeId;
+                    
+                    if (this.currentNodeName.equals(nodeDetails[1]+".utdallas.edu")){
+                        int nodeId = Integer.parseInt(nodeDetails[0]);
+                        this.nodeId = nodeId;
+                    }
+                    
 
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 

@@ -18,7 +18,7 @@ public class Server {
         SctpServerChannel ssc = SctpServerChannel.open();
 
         ssc.bind(address);
-        
+
         while(true) { // ssc.isOpen() is equivalent to 'true' in this case
             SctpChannel sc = ssc.accept();
             System.out.println("Client Connected");
@@ -73,7 +73,7 @@ public class Server {
         // This method updates the vector clock on receiving an application message
         synchronized (m) {
             for (int i=0; i<m.node.numberOfNodes; i++){
-                int value = Math.max(m.node.clock.get(i), msg.timestamp.get(i));
+                int value = Math.max(m.node.clock.get(i), msg.clock.get(i));
                 m.node.clock.set(i, value);
             }
             System.out.println("Vector clock on receveing: "+ m.node.clock);
