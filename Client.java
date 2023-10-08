@@ -49,7 +49,7 @@ public class Client {
             if (m.node.state.equals("active")){
                 Random random = new Random();
                 int number_of_messages_to_send = random.nextInt(m.node.maxPerActive - m.node.minPerActive + 1) + m.node.minPerActive;
-                send_application_messages(number_of_messages_to_send);
+                sendBatchMessages(number_of_messages_to_send);
             }
             else {
                 try {
@@ -63,7 +63,7 @@ public class Client {
         System.out.println("Exiting sendLogic() method.");
     }
 
-    public void send_application_messages(int count) throws Exception{
+    public void sendBatchMessages(int count) throws Exception{
         
         // This method sends 'count' number of messages to a randomly chosen neighbor
         System.out.println(String.format("Sending a batch of %d messages", count));
@@ -104,14 +104,24 @@ public class Client {
         
         // This static method sends a message.
         //  If the message is APPLICATION type, update the vector clock.
+
+
         MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
         byte[] messageBytes = msg.toMessageBytes();
         
         channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
 
         if (msg.messageType == MessageType.APPLICATION){
+            System.out.println("[DEBUG] Sending application message");
+
             int prevEntry = m.node.clock.get(m.node.nodeId);
+
+            System.out.println(m.node.messagesSent +" Before sending: " + m.node.clock);
+            
             m.node.clock.set(m.node.nodeId, prevEntry+1);
+
+            System.out.println(m.node.messagesSent + " After sending: " + m.node.clock);
+
             m.node.messagesSent ++;
         }
 
