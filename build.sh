@@ -6,6 +6,8 @@
 # code to remove carriage returns from files: sed -i -e 's/\r$//' <filename>
 
 # compilation command [CHANGE THIS to match your project files]
+git reset --hard HEAD
+git pull
 javac Main.java
 
 echo done building
