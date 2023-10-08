@@ -72,7 +72,7 @@ public class Client {
         for (int i=0; i<count; i++){
 
             if (m.node.messagesSent >= m.node.maxNumber){
-                m.node.state = "passive";
+                m.node.state = NodeState.PASSIVE;
                 break;
             }
 
@@ -82,7 +82,7 @@ public class Client {
             String messageString = String.format(
                 "Hi from %s! (%d/%d)", m.node.currentNodeName, m.node.messagesSent+1, m.node.maxNumber
             );
-            Message msg = new Message(messageString, m.node.nodeId, m.node.clock);
+            Message msg = new Message(m.node.nodeId, m.node.clock, messageString);
             
             synchronized (m){ // This block increments the value of vector clock after sending a message
                 Client.send_message(msg, channel, m);

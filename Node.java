@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+enum NodeState {PASSIVE, ACTIVE};
+
 public class Node {
 
     String NETID = "sxs210570";
@@ -29,7 +31,7 @@ public class Node {
 
     int messagesSent;
 
-    String state;
+    NodeState state;
 
     public Vector<Integer> clock = new Vector<>();
     
@@ -161,11 +163,11 @@ public class Node {
     }
 
     public void flipState() {
-        if (this.state.equals("active")) {
-            this.state = "passive";
+        if (this.state == NodeState.ACTIVE) {
+            this.state = NodeState.PASSIVE;
         }
         else {
-            this.state = "active";
+            this.state = NodeState.ACTIVE;
         }
     }
 

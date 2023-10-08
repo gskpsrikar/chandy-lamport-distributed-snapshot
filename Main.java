@@ -7,7 +7,7 @@ public class Main {
         node.parse_configuration_file();
         node.initiateVectorClock();
         node.repr();
-        node.state = "active";
+        node.state = NodeState.ACTIVE;
     }
 
     public static void main(String[] args) {
