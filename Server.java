@@ -34,8 +34,6 @@ public class Server {
                             handleMessage(msg);
 
                             System.out.println("[Received message text] : " + msg.message);
-                            
-                            wakeNodeIfPassive(msg);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -45,16 +43,6 @@ public class Server {
                 }
             };
             listener.start();
-        }
-    }
-
-    public void wakeNodeIfPassive(Message msg) {
-        // TODO: The node wakes up based on message length. Make this more reliable.
-        if (m.node.state == NodeState.PASSIVE){
-            if (msg.message.length() > 0) {
-                m.node.flipState();
-                System.out.println("Node changed from active to passive state");
-            }
         }
     }
 
@@ -71,12 +59,25 @@ public class Server {
 
     public void handleApplicationMessage(Message msg) {
         // This method updates the vector clock on receiving an application message
+
         synchronized (m) {
+            
+            wakeNodeIfPassive(msg);
+
             for (int i=0; i<m.node.numberOfNodes; i++){
                 int value = Math.max(m.node.clock.get(i), msg.clock.get(i));
                 m.node.clock.set(i, value);
             }
             System.out.println("Vector clock on receveing: "+ m.node.clock);
+        }
+    }
+
+    public void wakeNodeIfPassive(Message msg) {
+        // Wakes up a PASSIVE node on receiving an application message
+        if (m.node.state == NodeState.PASSIVE){
+            if (m.node.messagesSent < m.node.maxNumber){
+                m.node.flipState();
+            }
         }
     }
 
