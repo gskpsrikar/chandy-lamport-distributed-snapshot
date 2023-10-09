@@ -13,7 +13,9 @@ public class Client {
 
     public Client(Main m) throws Exception{
         this.m = m;
-        this.channelList = buildChannels(m.node);
+        synchronized (m) {
+            this.channelList = buildChannels(m.node);
+        }
     }
 
     private List<SctpChannel> buildChannels(Node node) {
@@ -30,7 +32,9 @@ public class Client {
                     new InetSocketAddress(neighbor_name, port)
                 );
                 channelList.add(clientChannel);
-
+                
+                System.out.println("############## " + m.node.hostToIdMap);
+                System.out.println("############## " + m.node.hostToIdMap.get(neighbor_name));
                 m.idToChannelMap.put(m.node.hostToIdMap.get(neighbor_name), clientChannel);
                 
             } catch (IOException e) {
