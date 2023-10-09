@@ -29,7 +29,8 @@ public class Node {
     int snapshotDelay;
     int maxNumber;
 
-    int messagesSent;
+    int messagesSent = 0;
+    int messagesReveived = 0;
 
     NodeState state;
 

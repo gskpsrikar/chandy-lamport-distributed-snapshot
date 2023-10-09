@@ -6,6 +6,7 @@ public class Main {
 
     Node node;
     Map<Integer, SctpChannel> idToChannelMap = new HashMap<>();
+    ChandyLamport snapshot;
 
     public Main(){
         this.node = new Node();
@@ -72,9 +73,11 @@ public class Main {
         System.out.println("Initiating snapshot thread...");
         Thread snapshot = new Thread() {
             public void run() {
-                ChandyLamport chandyLamport = new ChandyLamport(m);
                 try {
-                    chandyLamport.spanTree();
+                    if (m.node.nodeId == 0){
+                        Thread.sleep(10000);
+                        m.snapshot.initiateSpanning();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -46,7 +46,7 @@ public class Server {
         }
     }
 
-    public void handleMessage(Message msg){
+    public void handleMessage(Message msg) throws Exception{
 
         if (msg.messageType == MessageType.APPLICATION){
             handleApplicationMessage(msg);
@@ -63,7 +63,6 @@ public class Server {
 
     public void handleApplicationMessage(Message msg) {
         // This method updates the vector clock on receiving an application message
-
         synchronized (m) {
             
             wakeNodeIfPassive(msg);
@@ -73,6 +72,8 @@ public class Server {
                 m.node.clock.set(i, value);
             }
             System.out.println("Vector clock on receiving: "+ m.node.clock);
+
+            m.node.messagesReveived++;
         }
     }
 
@@ -85,15 +86,19 @@ public class Server {
         }
     }
 
-    public void handleMarkerMessage(Message msg) {
+    public void handleMarkerMessage(Message msg) throws Exception {
         synchronized (m){
             System.out.println("[CHANNEL INPUT] Received MARKER message from "+msg.senderId);
+            this.m.snapshot.receiveMarkerMessageFromParent(msg);
+            System.out.println("[CHANNEL INPUT RESPONSE] MARKER message is handled");
         }
     }
 
-    public void handleMarkerReplyMessage(Message msg){
+    public void handleMarkerReplyMessage(Message msg) throws Exception{
         synchronized (m){
             System.out.println("[CHANNEL INPUT] Received MARKER_REPLY message from "+msg.senderId);
+            this.m.snapshot.receiveMarkerRepliesFromChildren(msg);
+            System.out.println("[CHANNEL INPUT RESPONSE] MARKER_REPLY message is handled");
         }
     }
 }
