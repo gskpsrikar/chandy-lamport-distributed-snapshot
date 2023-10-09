@@ -38,32 +38,27 @@ public class ChandyLamport {
                 Client.send_message(msg, channel, m);
                 this.markersSent++;
             }
-            System.out.println(String.format("Markers Sent=%d | Replies Receivied=%d", this.markersSent, this.markerRepliesReceived));
-
         }
 
     }
 
-    private void rejectMarkerMessage(Message marker) throws Exception{
-        // Reject a MARKER message
-        Message rejectMarker = new Message(marker.senderId);
-        SctpChannel channel = this.m.idToChannelMap.get(marker.senderId);
-        Client.send_message(rejectMarker, channel, m);
-    }
-
-    public void handleMarkerRejection(Message markerReject) throws Exception{
-        // On receiving a marker rejection, see if this is a ping-pong rejection
-        if (markerReject.senderParent != this.m.node.nodeId){
-            System.out.println("[CHANNEL DEBUG] MARKER is rejected due to ping-pong ");
-            this.markersSent--;
-            checkTreeCollapseStatus();
-        }
+    public void markerStatus(){
+        System.out.println();
+        System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | Replies Receivied=%d", this.markersSent, this.markerRepliesReceived));
+        System.out.println();
     }
 
     public void receiveMarkerMessageFromParent(Message marker) throws Exception {
+
         if (this.PROCESS_COLOR == ProcessColor.RED){
-            rejectMarkerMessage(marker);
-            System.out.println(String.format("[CHANNEL INPUT] MARKER message from NODE-%d is rejected.", marker.senderId));
+            Message rejectMarker = new Message(marker.senderId);
+            SctpChannel channel = this.m.idToChannelMap.get(marker.senderId);
+            Client.send_message(rejectMarker, channel, this.m);
+            System.out.println(String.format("[MARKER RECEIVED] MARKER message from NODE-%d is rejected.", marker.senderId));
+            this.markerRepliesReceived ++;
+            
+            markerStatus();
+
             return;
         }
 
@@ -83,9 +78,10 @@ public class ChandyLamport {
                     Client.send_message(msg, channel, m);
                     this.markersSent++;
                 }
-                System.out.println(String.format("Markers Sent=%d | Replies Receivied=%d", this.markersSent, this.markerRepliesReceived));
             }
         }
+        System.out.println(String.format("[MARKER RECEIVED] MARKER message from NODE-%d is accepted.", marker.senderId));
+        markerStatus();
         checkTreeCollapseStatus();
     }
 
@@ -93,7 +89,10 @@ public class ChandyLamport {
 
         this.gatheredLocalSnapshots.putAll(markerReply.localSnapshots);
         this.markerRepliesReceived++;
+        markerStatus();
+
         checkTreeCollapseStatus();
+        System.out.println("[CHANNEL INPUT RESPONSE] MARKER_REPLY message is handled");
     };
 
     private void checkTreeCollapseStatus() throws Exception{
