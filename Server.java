@@ -87,7 +87,7 @@ public class Server {
                 m.node.clock.set(i, value);
             }
             System.out.println("Vector clock on receiving: "+ m.node.clock);
-            m.node.messagesReveived++;
+            m.node.messagesReveived += 1;
         }
     }
 

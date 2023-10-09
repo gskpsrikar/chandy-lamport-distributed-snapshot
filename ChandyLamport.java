@@ -22,11 +22,12 @@ public class ChandyLamport {
     private Integer gatheredMessagesSent = 0;
     private Integer gatheredMessagesReceived = 0;
 
-    private NodeState gatheredState = NodeState.PASSIVE;
+    private NodeState gatheredState;
 
     public ChandyLamport(Main m){
         this.m = m;
         this.PROCESS_COLOR = ProcessColor.BLUE;
+        this.gatheredState = NodeState.PASSIVE;
     }
 
     public void initiateSpanning() throws Exception {
@@ -130,7 +131,7 @@ public class ChandyLamport {
             Message markerReplyMsg = new Message(
                 this.m.node.nodeId, 
                 this.gatheredLocalSnapshots, 
-                this.m.node.state, 
+                this.gatheredState, 
                 this.gatheredMessagesSent, 
                 this.gatheredMessagesReceived
             );

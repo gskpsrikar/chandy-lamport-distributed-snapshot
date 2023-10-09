@@ -74,7 +74,7 @@ public class Main {
             public void run() {
                 try {
                     if (m.node.nodeId == 0){
-                        Thread.sleep(10000);
+                        Thread.sleep(20000);
                         m.snapshot.initiateSpanning();
                     }
                 } catch (Exception e) {
