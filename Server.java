@@ -65,8 +65,8 @@ public class Server {
         }
     }
 
-    public void handleMarkerRejection(Message msg){
-        this.m.snapshot.handleMarkerRejection();
+    public void handleMarkerRejection(Message msg) throws Exception{
+        this.m.snapshot.handleMarkerRejection(msg);
     }
 
     public void handleApplicationMessage(Message msg) {
