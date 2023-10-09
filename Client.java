@@ -31,6 +31,8 @@ public class Client {
                 );
                 channelList.add(clientChannel);
 
+                m.idToChannelMap.put(m.node.hostToIdMap.get(neighbor_name), clientChannel);
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,7 +106,6 @@ public class Client {
         
         // This static method sends a message.
         //  If the message is APPLICATION type, update the vector clock.
-
 
         MessageInfo messageInfo = MessageInfo.createOutgoing(null, 0);
         byte[] messageBytes = msg.toMessageBytes();

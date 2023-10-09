@@ -83,5 +83,8 @@ public class Server {
 
     public void handleMarkerMessage(Message msg) {
         // TODO: Do operations that needs to be done on receiving a messsage.
+        synchronized (m){
+            System.out.println("[CHANNEL INPUT] Received MARKER message from "+msg.senderId);
+        }
     }
 }

@@ -34,6 +34,9 @@ public class Node {
     NodeState state;
 
     public Vector<Integer> clock = new Vector<>();
+
+    Map<String, Integer> hostToIdMap = new HashMap<>();
+    Map<Integer, String> idToHostMap = new HashMap<>();
     
     public Node() {
         this.currentNodeName = getHostName();
@@ -116,13 +119,14 @@ public class Node {
                     if (this.currentNodeName.equals(nodeDetails[1]+".utdallas.edu")){
                         this.nodeId = Integer.parseInt(nodeDetails[0]);
                     }
-
                     // (hostname, listenport)
                     List<String> value = new ArrayList<>(); 
                     value.add(nodeDetails[1]+".utdallas.edu"); // This need to be changed incase of local systems
                     value.add(nodeDetails[2]);
+                    
+                    idToHostMap.put(Integer.parseInt(nodeDetails[0]), nodeDetails[1]+".utdallas.edu");
+                    hostToIdMap.put(nodeDetails[1]+".utdallas.edu", Integer.parseInt(nodeDetails[0]));
 
-                    dictionary.put(Integer.parseInt(nodeDetails[0]), value);
                     validLineNumber += 1;
 
                 } else {
@@ -177,7 +181,5 @@ public class Node {
         for (int i=0; i < numberOfNodes; i++){
             this.clock.add(0);
         }
-        // integerVector.set(indexToUpdate, newValue);
-        // int valueAtIndex = integerVector.get(indexToGet);
     }
 }

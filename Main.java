@@ -1,6 +1,11 @@
+import com.sun.nio.sctp.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
     Node node;
+    Map<Integer, SctpChannel> idToChannelMap = new HashMap<>();
 
     public Main(){
         this.node = new Node();
@@ -17,7 +22,7 @@ public class Main {
         System.out.println(m.node.clock);
         System.out.println(m.node.nodeId);
 
-        m.initiateListener(m);
+        m.initiateServerThread(m);
         
         try {
             System.out.println("Sleeping for 5 seconds to allow other nodes wake other nodes...");
@@ -26,10 +31,12 @@ public class Main {
             e.printStackTrace();
         }
         
-        m.initiateSender(m);
+        m.initiateClientThread(m);
+
+        m.initateChandyLamportSnapshot(m);
     }
 
-    public void initiateSender(Main m) {
+    public void initiateClientThread(Main m) {
         System.out.println("Intiating sender(client) thread...");
         Thread sender = new Thread() {
             public void run() {
@@ -45,7 +52,7 @@ public class Main {
         System.out.println("Sender(client) initiated");
     }
 
-    private void initiateListener(Main m) {
+    private void initiateServerThread(Main m) {
         System.out.println("Intiating listener(server) thread...");
         Thread listener = new Thread() {
             public void run() {
@@ -55,9 +62,25 @@ public class Main {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            };
+            }
         };
         listener.start();
         System.out.println("Listener(server) initiated");
+    }
+
+    private void initateChandyLamportSnapshot(Main m){
+        System.out.println("Initiating snapshot thread...");
+        Thread snapshot = new Thread() {
+            public void run() {
+                ChandyLamport chandyLamport = new ChandyLamport(m);
+                try {
+                    chandyLamport.dfs();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        snapshot.start();
+        System.out.println("Chandy Lamport protocol initiated");
     }
 }
