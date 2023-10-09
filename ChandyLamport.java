@@ -19,6 +19,10 @@ public class ChandyLamport {
     public ProcessColor PROCESS_COLOR;
 
     private Map<Integer, Vector<Integer>> gatheredLocalSnapshots = new HashMap<>();
+    private Integer gatheredMessagesSent = 0;
+    private Integer gatheredMessagesReceived = 0;
+
+    private NodeState gatheredState = NodeState.PASSIVE;
 
     public ChandyLamport(Main m){
         this.m = m;
@@ -91,6 +95,14 @@ public class ChandyLamport {
     public void receiveMarkerRepliesFromChildren (Message markerReply) throws Exception{
 
         this.gatheredLocalSnapshots.putAll(markerReply.localSnapshots);
+
+        this.gatheredMessagesSent += markerReply.messagesSent;
+        this.gatheredMessagesReceived += markerReply.messagesReceived;
+
+        if (markerReply.state == NodeState.ACTIVE){
+            this.gatheredState = NodeState.ACTIVE;
+        }
+
         this.markerRepliesReceived++;
         markerStatus();
 
@@ -102,7 +114,15 @@ public class ChandyLamport {
         System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
         markerStatus();
         if (this.markersSent == this.markerRepliesReceived) {
+            
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);
+            this.gatheredMessagesSent += this.m.node.messagesSent;
+            this.gatheredMessagesReceived += this.gatheredMessagesReceived;
+
+            if (this.m.node.state == NodeState.ACTIVE){
+                this.gatheredState = NodeState.ACTIVE;
+            }
+
             if (this.m.node.nodeId == 0){
                 handleConvergence();
                 return;
@@ -111,17 +131,19 @@ public class ChandyLamport {
                 this.m.node.nodeId, 
                 this.gatheredLocalSnapshots, 
                 this.m.node.state, 
-                this.m.node.messagesSent, 
-                this.m.node.messagesReveived
+                this.gatheredMessagesSent, 
+                this.gatheredMessagesReceived
             );
+
             Client.send_message(markerReplyMsg, this.m.idToChannelMap.get(this.parentId), this.m);
         };
     }
 
     private void handleConvergence(){
         System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
-        System.out.println("[CONVERGENCE] Local Snapshots = " + this.m.snapshot.gatheredLocalSnapshots);
-        System.out.println("[CONVERGENCE] Messages Sent = " + this.m.node.messagesSent);
-        System.out.println("[CONVERGENCE] Messages reveived = " + this.m.node.messagesReveived);
+        System.out.println("[CONVERGENCE] Local Snapshots = " + this.gatheredLocalSnapshots);
+        System.out.println("[CONVERGENCE] Total messages sent = " + this.gatheredMessagesSent);
+        System.out.println("[CONVERGENCE] Total messages reveived = " + this.gatheredMessagesReceived);
+        System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
     }
 }
