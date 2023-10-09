@@ -31,6 +31,6 @@ public class ChandyLamport {
         //     synchronized(m) {
         //         Client.send_message(msg, channel, m);
         //     }
-        }
+        // }
     }
 }
