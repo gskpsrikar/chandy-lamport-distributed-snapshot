@@ -40,7 +40,7 @@ public class Main {
     }
 
     public void initiateClientThread(Main m) {
-        System.out.println("Intiating sender(client) thread...");
+        // System.out.println("Intiating sender(client) thread...");
         Thread sender = new Thread() {
             public void run() {
                 try {
@@ -52,11 +52,11 @@ public class Main {
             };
         };
         sender.start();
-        System.out.println("Sender(client) initiated");
+        // System.out.println("Sender(client) initiated");
     }
 
     private void initiateServerThread(Main m) {
-        System.out.println("Intiating listener(server) thread...");
+        // System.out.println("Intiating listener(server) thread...");
         Thread listener = new Thread() {
             public void run() {
                 Server listenerObject = new Server(m);
@@ -68,11 +68,11 @@ public class Main {
             }
         };
         listener.start();
-        System.out.println("Listener(server) initiated");
+        // System.out.println("Listener(server) initiated");
     }
 
     private void initateChandyLamportSnapshot(Main m){
-        System.out.println("Initiating snapshot thread...");
+        // System.out.println("Initiating snapshot thread...");
         Thread snapshot = new Thread() {
             public void run() {
                 try {
@@ -86,6 +86,6 @@ public class Main {
             }
         };
         snapshot.start();
-        System.out.println("Chandy Lamport protocol initiated");
+        // System.out.println("Chandy Lamport protocol initiated");
     }
 }

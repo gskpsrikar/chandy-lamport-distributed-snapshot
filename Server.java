@@ -33,7 +33,7 @@ public class Server {
 
                             handleMessage(msg);
 
-                            System.out.println("[Received message text] : " + msg.message);
+                            // System.out.println("[Received message text] : " + msg.message);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -48,25 +48,32 @@ public class Server {
 
     public void handleMessage(Message msg) throws Exception{
 
+        // Message Handler
+
         if (msg.messageType == MessageType.APPLICATION){
             handleApplicationMessage(msg);
         };
 
+        // Receiving a MARKER message
         if (msg.messageType == MessageType.MARKER){
-            handleMarkerMessage(msg);
+            synchronized (m){
+                System.out.println("[MARKER RECEIVED] Received MARKER message from NODE: "+msg.senderId);
+                this.m.snapshot.receiveMarkerMessageFromParent(msg);
+            }
         };
 
-        if (msg.messageType == MessageType.MARKER_REPLY){
-            handleMarkerReplyMessage(msg);
-        }
-
+        // Response to MARKER sent to a RED process
         if (msg.messageType == MessageType.MARKER_REJECTION){
-            handleMarkerRejection(msg);
-        }
-    }
+            this.m.snapshot.receiveMarkerRejectionMessage(msg);
+        };
 
-    public void handleMarkerRejection(Message msg) throws Exception{
-        this.m.snapshot.receiveMarkerMessageFromParent(msg);
+        // Received from children in the collapse process
+        if (msg.messageType == MessageType.MARKER_REPLY){
+                synchronized (m){
+                System.out.println("[CHANNEL INPUT] Received MARKER_REPLY message from "+msg.senderId);
+                this.m.snapshot.receiveMarkerRepliesFromChildren(msg);
+            }
+        };
     }
 
     public void handleApplicationMessage(Message msg) {
@@ -90,20 +97,6 @@ public class Server {
             if (m.node.messagesSent < m.node.maxNumber){
                 m.node.flipState();
             }
-        }
-    }
-
-    public void handleMarkerMessage(Message msg) throws Exception {
-        synchronized (m){
-            System.out.println("[MARKER RECEIVED] Received MARKER message from NODE: "+msg.senderId);
-            this.m.snapshot.receiveMarkerMessageFromParent(msg);
-        }
-    }
-
-    public void handleMarkerReplyMessage(Message msg) throws Exception{
-        synchronized (m){
-            System.out.println("[CHANNEL INPUT] Received MARKER_REPLY message from "+msg.senderId);
-            this.m.snapshot.receiveMarkerRepliesFromChildren(msg);
         }
     }
 }

@@ -22,8 +22,7 @@ public class Message implements Serializable
 	public Integer messagesSent;
 	public Integer messagesReceived;
 	public Set<Integer> visited;
-	public Integer senderParent;
-
+	
 	public Message(int senderId, Vector<Integer> timestamp, String message)
 	{
 		// Contructor for application message
@@ -41,8 +40,7 @@ public class Message implements Serializable
 
 	}
 
-	public Message (int senderParent) {
-		this.senderParent = senderParent;
+	public Message () {
 		this.messageType = MessageType.MARKER_REJECTION;
 	}
 

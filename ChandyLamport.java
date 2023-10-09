@@ -48,17 +48,20 @@ public class ChandyLamport {
         System.out.println();
     }
 
+    public void receiveMarkerRejectionMessage(Message markerRejectionMsg) throws Exception {
+        this.markerRepliesReceived++;
+        checkTreeCollapseStatus();
+
+    }
+
     public void receiveMarkerMessageFromParent(Message marker) throws Exception {
 
         if (this.PROCESS_COLOR == ProcessColor.RED){
-            Message rejectMarker = new Message(marker.senderId);
+            Message rejectMarker = new Message();
             SctpChannel channel = this.m.idToChannelMap.get(marker.senderId);
             Client.send_message(rejectMarker, channel, this.m);
-            System.out.println(String.format("[MARKER RECEIVED] MARKER message from NODE-%d is rejected.", marker.senderId));
-            this.markerRepliesReceived ++;
-            
+            System.out.println(String.format("[MARKER REJECTED] MARKER message from NODE-%d is rejected.", marker.senderId));
             markerStatus();
-
             return;
         }
 
@@ -80,7 +83,7 @@ public class ChandyLamport {
                 }
             }
         }
-        System.out.println(String.format("[MARKER RECEIVED] MARKER message from NODE-%d is accepted.", marker.senderId));
+        System.out.println(String.format("[MARKER ACCEPTED] MARKER message from NODE-%d is accepted.", marker.senderId));
         markerStatus();
         checkTreeCollapseStatus();
     }
@@ -114,7 +117,7 @@ public class ChandyLamport {
     }
 
     private void handleConvergence(){
-        System.out.println("[CHANNEL INPUT] Euler Traversal successfully completed at node 0.");
+        System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
         System.out.println("[DEBUG] " + this.m);
     }
 }
