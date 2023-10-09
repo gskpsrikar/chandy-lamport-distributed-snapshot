@@ -1,15 +1,18 @@
 import java.util.Map;
+import java.util.Set;
 
 import com.sun.nio.sctp.SctpChannel;
 
 public class ChandyLamport {
     public Main m;
+    public Set<Integer> parents;
 
     public ChandyLamport(Main m){
         this.m = m;
+
     }
 
-    public void dfs() throws Exception {
+    public void spanTree() throws Exception {
         try {
             System.out.println("[THREAD] Initiating Snapshot DFS function in 3 seconds");
             Thread.sleep(3000);
@@ -17,20 +20,19 @@ public class ChandyLamport {
             e.printStackTrace();
         }
 
-        System.out.println("######### [DEBUG] IdToChannelMap = " + m.idToChannelMap);
-
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
             
-            Integer nodeId = entry.getKey();
+            // Integer nodeId = entry.getKey();
             SctpChannel channel = entry.getValue();
-            
-            System.out.println("Key: " + nodeId + ", Channel: " + channel);
 
-            Message msg = new Message(m.node.nodeId);
-
+            Message msg = new Message(m.node.nodeId, parents);
             synchronized(m) {
                 Client.send_message(msg, channel, m);
             }
         }
+    }
+
+    public void collapseTree() throws Exception {
+
     }
 }

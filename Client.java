@@ -32,11 +32,8 @@ public class Client {
                     new InetSocketAddress(neighbor_name, port)
                 );
                 channelList.add(clientChannel);
-                
-                System.out.println("############## " + m.node.hostToIdMap);
-                System.out.println("############## " + m.node.hostToIdMap.get(neighbor_name));
+
                 m.idToChannelMap.put(m.node.hostToIdMap.get(neighbor_name), clientChannel);
-                System.out.println("############## " + m.idToChannelMap);
                 
             } catch (IOException e) {
                 e.printStackTrace();

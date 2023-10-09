@@ -54,6 +54,10 @@ public class Server {
 
         if (msg.messageType == MessageType.MARKER){
             handleMarkerMessage(msg);
+        };
+
+        if (msg.messageType == MessageType.MARKER_REPLY){
+            handleMarkerReplyMessage(msg);
         }
     }
 
@@ -68,7 +72,7 @@ public class Server {
                 int value = Math.max(m.node.clock.get(i), msg.clock.get(i));
                 m.node.clock.set(i, value);
             }
-            System.out.println("Vector clock on receveing: "+ m.node.clock);
+            System.out.println("Vector clock on receiving: "+ m.node.clock);
         }
     }
 
@@ -82,9 +86,14 @@ public class Server {
     }
 
     public void handleMarkerMessage(Message msg) {
-        // TODO: Do operations that needs to be done on receiving a messsage.
         synchronized (m){
             System.out.println("[CHANNEL INPUT] Received MARKER message from "+msg.senderId);
+        }
+    }
+
+    public void handleMarkerReplyMessage(Message msg){
+        synchronized (m){
+            System.out.println("[CHANNEL INPUT] Received MARKER_REPLY message from "+msg.senderId);
         }
     }
 }

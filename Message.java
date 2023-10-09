@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import java.io.ObjectOutputStream;
@@ -20,6 +21,7 @@ public class Message implements Serializable
 	public NodeState state;
 	public Integer messagesSent;
 	public Integer messagesReceived;
+	public Set<Integer> visited;
 
 	public Message(int senderId, Vector<Integer> timestamp, String message)
 	{
@@ -30,10 +32,11 @@ public class Message implements Serializable
 		this.senderId = senderId;
 	}
 
-	public Message(int senderId) {
+	public Message(int senderId, Set<Integer> visited) {
 		// Constructor for marker message
 		this.messageType = MessageType.MARKER;
 		this.senderId = senderId;
+		this.visited = visited;
 
 	}
 

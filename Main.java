@@ -74,7 +74,7 @@ public class Main {
             public void run() {
                 ChandyLamport chandyLamport = new ChandyLamport(m);
                 try {
-                    chandyLamport.dfs();
+                    chandyLamport.spanTree();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

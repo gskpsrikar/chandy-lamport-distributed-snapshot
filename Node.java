@@ -54,7 +54,7 @@ public class Node {
 
     public void details(){
         System.out.println("Current node is " + currentNodeName);
-        System.out.println("Cuurent node number is " + nodeId);
+        System.out.println("Current node number is " + nodeId);
         
         int n = neighbors.size();
         String neighborString = "";
