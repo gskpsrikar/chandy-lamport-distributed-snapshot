@@ -33,7 +33,7 @@ public class ChandyLamport {
             Set<Integer> newVisited = new HashSet<>();
             newVisited.add(m.node.nodeId);
             
-            Message msg = new Message(m.node.nodeId, newVisited); // MARKER Message Constructor
+            Message msg = new Message(m.node.nodeId); // MARKER Message Constructor
             synchronized(m) {
                 Client.send_message(msg, channel, m);
                 this.markersSent++;
@@ -44,7 +44,7 @@ public class ChandyLamport {
 
     public void markerStatus(){
         System.out.println();
-        System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | Replies Receivied=%d", this.markersSent, this.markerRepliesReceived));
+        System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Receivied=%d", this.markersSent, this.markerRepliesReceived));
         System.out.println();
     }
 
@@ -69,18 +69,12 @@ public class ChandyLamport {
         this.parentId = marker.senderId;
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
-            Integer neighborId = entry.getKey();
-            if (marker.visited.contains(neighborId)){
-                continue;
-            } else {
-                SctpChannel channel = entry.getValue();
-                Set<Integer> newVisited = new HashSet<>(marker.visited);
-                newVisited.add(m.node.nodeId);
-                Message msg = new Message(m.node.nodeId, newVisited); // MARKER Message Constructor
-                synchronized(m) {
-                    Client.send_message(msg, channel, m);
-                    this.markersSent++;
-                }
+            SctpChannel channel = entry.getValue();
+
+            Message msg = new Message(m.node.nodeId); // MARKER Message Constructor
+            synchronized(m) {
+                Client.send_message(msg, channel, m);
+                this.markersSent++;
             }
         }
         System.out.println(String.format("[MARKER ACCEPTED] MARKER message from NODE-%d is accepted.", marker.senderId));
@@ -118,6 +112,6 @@ public class ChandyLamport {
 
     private void handleConvergence(){
         System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
-        System.out.println("[DEBUG] " + this.m);
+        System.out.println("[CONVERGENCE] " + this.m.snapshot.gatheredLocalSnapshots);
     }
 }
