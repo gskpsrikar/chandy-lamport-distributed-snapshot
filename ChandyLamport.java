@@ -6,7 +6,7 @@ public class ChandyLamport {
     public Main m;
 
     public ChandyLamport(Main m){
-
+        this.m = m;
     }
 
     public void dfs() throws Exception {
@@ -17,20 +17,20 @@ public class ChandyLamport {
             e.printStackTrace();
         }
 
-        System.out.println("[DEBUG] IdToChannelMap = " + m.idToChannelMap);
+        System.out.println("######### [DEBUG] IdToChannelMap = " + m.idToChannelMap);
 
-        // for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
             
-        //     Integer nodeId = entry.getKey();
-        //     SctpChannel channel = entry.getValue();
+            Integer nodeId = entry.getKey();
+            SctpChannel channel = entry.getValue();
             
-        //     System.out.println("Key: " + nodeId + ", Channel: " + channel);
+            System.out.println("Key: " + nodeId + ", Channel: " + channel);
 
-        //     Message msg = new Message(m.node.nodeId);
+            Message msg = new Message(m.node.nodeId);
 
-        //     synchronized(m) {
-        //         Client.send_message(msg, channel, m);
-        //     }
-        // }
+            synchronized(m) {
+                Client.send_message(msg, channel, m);
+            }
+        }
     }
 }
