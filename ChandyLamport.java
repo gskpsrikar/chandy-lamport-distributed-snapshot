@@ -99,6 +99,8 @@ public class ChandyLamport {
     };
 
     private void checkTreeCollapseStatus() throws Exception{
+        System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
+        markerStatus();
         if (this.markersSent == this.markerRepliesReceived) {
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);
             if (this.m.node.nodeId == 0){
@@ -118,6 +120,8 @@ public class ChandyLamport {
 
     private void handleConvergence(){
         System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
-        System.out.println("[CONVERGENCE] " + this.m.snapshot.gatheredLocalSnapshots);
+        System.out.println("[CONVERGENCE] Local Snapshots = " + this.m.snapshot.gatheredLocalSnapshots);
+        System.out.println("[CONVERGENCE] Messages Sent = " + this.m.node.messagesSent);
+        System.out.println("[CONVERGENCE] Messages reveived = " + this.m.node.messagesReveived);
     }
 }
