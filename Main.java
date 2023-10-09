@@ -23,6 +23,8 @@ public class Main {
         System.out.println(m.node.clock);
         System.out.println(m.node.nodeId);
 
+        m.snapshot = new ChandyLamport(m);
+
         m.initiateServerThread(m);
         
         try {
