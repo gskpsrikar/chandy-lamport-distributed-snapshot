@@ -12,3 +12,5 @@ bin/
 *.log
 *.tmp
 *.class
+config.txt
+NodeDebug.java

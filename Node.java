@@ -127,6 +127,8 @@ public class Node {
                     idToHostMap.put(Integer.parseInt(nodeDetails[0]), nodeDetails[1]+".utdallas.edu");
                     hostToIdMap.put(nodeDetails[1]+".utdallas.edu", Integer.parseInt(nodeDetails[0]));
 
+                    dictionary.put(Integer.parseInt(nodeDetails[0]), value);
+
                     validLineNumber += 1;
 
                 } else {
