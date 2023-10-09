@@ -44,8 +44,26 @@ public class ChandyLamport {
 
     }
 
+    private void rejectMarkerMessage(Message marker) throws Exception{
+        // Reject a MARKER message
+        Message rejectMarker = new Message(marker.senderId);
+        SctpChannel channel = this.m.idToChannelMap.get(marker.senderId);
+        Client.send_message(rejectMarker, channel, m);
+    }
+
+    public void handleMarkerRejection(Message markerReject) throws Exception{
+        // On receiving a marker rejection, see if this is a ping-pong rejection
+        if (markerReject.senderParent != this.m.node.nodeId){
+            System.out.println("[CHANNEL DEBUG] MARKER is rejected due to ping-pong ");
+            this.markersSent--;
+            checkTreeCollapseStatus();
+        }
+    }
+
     public void receiveMarkerMessageFromParent(Message marker) throws Exception {
         if (this.PROCESS_COLOR == ProcessColor.RED){
+            rejectMarkerMessage(marker);
+            System.out.println(String.format("[CHANNEL INPUT] MARKER message from NODE-%d is rejected.", marker.senderId));
             return;
         }
 

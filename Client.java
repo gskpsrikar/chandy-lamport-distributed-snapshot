@@ -46,7 +46,7 @@ public class Client {
     public void sendApplicationMessageLogic() throws Exception {
         while (true) {
             if (m.node.messagesSent >= m.node.maxNumber){
-                System.out.println("[TERMINATION] Node sent maximum number of messages. Going permanently passive");
+                System.out.println("[STATE CHANGE] Node sent maximum number of messages. Going permanently passive");
                 break;
             }
 
@@ -94,13 +94,13 @@ public class Client {
 
             try {
                 Thread.sleep(m.node.minSendDelay);
-                System.out.println(String.format("Delaying sending messages for %d milliseconds", m.node.minSendDelay));
-                System.out.println();
+                // System.out.println(String.format("Delaying sending messages for %d milliseconds", m.node.minSendDelay));
+                // System.out.println();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("[STATE CHANGE] Flipping node state from active to passive because a batch of messages are sent to neighbors.");
+        // System.out.println("[STATE CHANGE] Flipping node state from active to passive because a batch of messages are sent to neighbors.");
         m.node.flipState();
     }
 
@@ -115,10 +115,10 @@ public class Client {
         channel.send(ByteBuffer.wrap(messageBytes), messageInfo);
 
         if (msg.messageType == MessageType.APPLICATION){
-            System.out.println("[DEBUG] Sending application message");
+            // System.out.println("[DEBUG] Sending application message");
 
             int prevEntry = m.node.clock.get(m.node.nodeId);
-            System.out.println(String.format("[DEBUG][Node:%d] (%d) Before sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
+            // System.out.println(String.format("[DEBUG][Node:%d] (%d) Before sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
 
             m.node.clock.set(m.node.nodeId, prevEntry+1);
 
@@ -126,6 +126,5 @@ public class Client {
 
             m.node.messagesSent ++;
         }
-        
     }
 }

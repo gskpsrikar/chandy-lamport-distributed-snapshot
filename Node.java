@@ -116,7 +116,7 @@ public class Node {
 
                 } else if (validLineNumber <= n) {
                     String[] nodeDetails = line.split(" ");
-                    System.out.println(this.currentNodeName + " " + nodeDetails[1] + " " + this.currentNodeName.equals(nodeDetails[1]));
+                    // System.out.println(this.currentNodeName + " " + nodeDetails[1] + " " + this.currentNodeName.equals(nodeDetails[1]));
                     if (this.currentNodeName.equals(nodeDetails[1]+".utdallas.edu")){
                         this.nodeId = Integer.parseInt(nodeDetails[0]);
                     }

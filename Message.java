@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-enum MessageType {APPLICATION, MARKER, MARKER_REPLY};
+enum MessageType {APPLICATION, MARKER, MARKER_REPLY, MARKER_REJECTION};
 
 public class Message implements Serializable 
 {
@@ -22,6 +22,7 @@ public class Message implements Serializable
 	public Integer messagesSent;
 	public Integer messagesReceived;
 	public Set<Integer> visited;
+	public Integer senderParent;
 
 	public Message(int senderId, Vector<Integer> timestamp, String message)
 	{
@@ -38,6 +39,11 @@ public class Message implements Serializable
 		this.senderId = senderId;
 		this.visited = visited;
 
+	}
+
+	public Message (int senderParent) {
+		this.senderParent = senderParent;
+		this.messageType = MessageType.MARKER_REJECTION;
 	}
 
 	public Message(int senderId, Map<Integer, Vector<Integer>> localSnapshots, NodeState state, Integer messagesSent, Integer messagesReceived) {

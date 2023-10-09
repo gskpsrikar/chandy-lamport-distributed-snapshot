@@ -59,6 +59,14 @@ public class Server {
         if (msg.messageType == MessageType.MARKER_REPLY){
             handleMarkerReplyMessage(msg);
         }
+
+        if (msg.messageType == MessageType.MARKER_REJECTION){
+            handleMarkerRejection(msg);
+        }
+    }
+
+    public void handleMarkerRejection(Message msg){
+        this.m.snapshot.handleMarkerRejection();
     }
 
     public void handleApplicationMessage(Message msg) {
