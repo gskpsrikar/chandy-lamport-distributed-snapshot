@@ -26,6 +26,8 @@ public class ChandyLamport {
     }
 
     public void initiateSpanning() throws Exception {
+        this.PROCESS_COLOR = ProcessColor.RED;
+
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
@@ -36,7 +38,7 @@ public class ChandyLamport {
             Message msg = new Message(m.node.nodeId); // MARKER Message Constructor
             synchronized(m) {
                 Client.send_message(msg, channel, m);
-                this.markersSent++;
+                this.markersSent+=1;
             }
         }
 
@@ -44,17 +46,20 @@ public class ChandyLamport {
 
     public void markerStatus(){
         System.out.println();
-        System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Receivied=%d", this.markersSent, this.markerRepliesReceived));
+        System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Received=%d", this.markersSent, this.markerRepliesReceived));
         System.out.println();
     }
 
     public void receiveMarkerRejectionMessage(Message markerRejectionMsg) throws Exception {
-        this.markerRepliesReceived++;
+        System.out.println("[COLOR]: "+this.PROCESS_COLOR);
+        this.markerRepliesReceived += 1;
         checkTreeCollapseStatus();
+        System.out.println(String.format("[REJECTION ARRIVED] NODE:%d Rejected you marker message", markerRejectionMsg.senderId));
 
     }
 
     public void receiveMarkerMessageFromParent(Message marker) throws Exception {
+        System.out.println("[COLOR]: "+this.PROCESS_COLOR);
 
         if (this.PROCESS_COLOR == ProcessColor.RED){
             Message rejectMarker = new Message();
@@ -77,6 +82,7 @@ public class ChandyLamport {
                 this.markersSent++;
             }
         }
+
         System.out.println(String.format("[MARKER ACCEPTED] MARKER message from NODE-%d is accepted.", marker.senderId));
         markerStatus();
         checkTreeCollapseStatus();
