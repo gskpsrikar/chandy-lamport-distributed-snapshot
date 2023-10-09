@@ -58,7 +58,7 @@ public class ChandyLamport {
                 continue;
             } else {
                 SctpChannel channel = entry.getValue();
-                Set<Integer> newVisited = new HashSet<>(visited);
+                Set<Integer> newVisited = new HashSet<>(marker.visited);
                 newVisited.add(m.node.nodeId);
                 Message msg = new Message(m.node.nodeId, newVisited); // MARKER Message Constructor
                 synchronized(m) {
