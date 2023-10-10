@@ -1,5 +1,7 @@
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import com.sun.nio.sctp.SctpChannel;
@@ -70,14 +72,15 @@ public class ChandyLamport {
         this.resetSnapshot();
         System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
         
-        // System.out.println("[SNAPSHOT PROCESS RESULT] "+resetMessage.message);
-
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
-            if (entry.getKey() == 0){
-                System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node 0.");
+            if (entry.getKey() == 0 || resetMessage.parents.contains(entry.getKey())){
+                System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node "+entry.getKey());
             }
             SctpChannel channel = entry.getValue();
-            Message msg = new Message(resetMessage.message); // RESET SNAPSHOT Message Constructor
+
+            Set<Integer> parents = new HashSet<>(resetMessage.parents);
+            parents.add(this.m.node.nodeId);
+            Message msg = new Message(resetMessage.message, parents); // RESET SNAPSHOT Message Constructor
             synchronized(m) {
                 Client.send_message(msg, channel, m);
             }
@@ -199,8 +202,11 @@ public class ChandyLamport {
                 messageText = "**** YOU ARE TERMINATED ****";
                 TERMINATED = true;
             }
+            
+            Set<Integer> parents = new HashSet<>();
+            parents.add(0);
 
-            Message msg = new Message(messageText); // END_SNAPSHOT Message Constructor
+            Message msg = new Message(messageText, parents); // END_SNAPSHOT Message Constructor
             synchronized(m) {
                 Client.send_message(msg, channel, m);
             }

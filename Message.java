@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import java.io.ObjectOutputStream;
@@ -20,6 +21,7 @@ public class Message implements Serializable
 	public NodeState state;
 	public Integer messagesSent;
 	public Integer messagesReceived;
+	public Set<Integer> parents;
 	
 	public Message(int senderId, Vector<Integer> timestamp, String message)
 	{
@@ -50,9 +52,10 @@ public class Message implements Serializable
 		this.messagesReceived = messagesReceived;
 	}
 
-	public Message(String messageText){
+	public Message(String messageText, Set<Integer> parents){
 		this.messageType = MessageType.END_SNAPSHOT; // END_SNAPSHOT message
 		this.message = messageText;
+		this.parents = parents;
 	}
 
 	// Convert current instance of Message to ByteBuffer in order to send message over SCTP

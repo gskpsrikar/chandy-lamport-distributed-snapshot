@@ -172,11 +172,11 @@ public class Node {
     public void flipState() {
         if (this.state == NodeState.ACTIVE) {
             this.state = NodeState.PASSIVE;
-            System.out.println("[STATE CHANGE] Node changed from ACTIVE TO PASSIVE");
+            // System.out.println("[STATE CHANGE] Node changed from ACTIVE TO PASSIVE");
         }
         else {
             this.state = NodeState.ACTIVE;
-            System.out.println("[STATE CHANGE] Node changed from PASSIVE TO ACTIVE");
+            // System.out.println("[STATE CHANGE] Node changed from PASSIVE TO ACTIVE");
         }
     }
 
