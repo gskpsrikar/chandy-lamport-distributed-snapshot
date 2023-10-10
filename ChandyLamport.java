@@ -129,6 +129,7 @@ public class ChandyLamport {
                 handleConvergence();
                 return;
             }
+
             Message markerReplyMsg = new Message(
                 this.m.node.nodeId, 
                 this.gatheredLocalSnapshots, 
@@ -145,7 +146,7 @@ public class ChandyLamport {
         System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
         System.out.println("[CONVERGENCE] Local Snapshots = " + this.gatheredLocalSnapshots);
         System.out.println("[CONVERGENCE] Total messages sent = " + this.gatheredMessagesSent);
-        System.out.println("[CONVERGENCE] Total messages reveived = " + this.gatheredMessagesReceived);
+        System.out.println("[CONVERGENCE] Total messages received = " + this.gatheredMessagesReceived);
         System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
     }
 }

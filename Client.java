@@ -47,6 +47,7 @@ public class Client {
         while (true) {
             if (m.node.messagesSent >= m.node.maxNumber){
                 System.out.println("[STATE CHANGE] Node sent maximum number of messages. Going permanently passive");
+                m.node.state = NodeState.PASSIVE;
                 break;
             }
 
