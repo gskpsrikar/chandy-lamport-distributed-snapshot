@@ -200,5 +200,14 @@ public class ChandyLamport {
                 this.markersSent+=1;
             }
         };
+
+        try {
+            System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
+            Thread.sleep(this.m.node.snapshotDelay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
+        initiateSpanning();
     }
 }
