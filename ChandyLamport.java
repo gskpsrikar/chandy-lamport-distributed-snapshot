@@ -68,7 +68,8 @@ public class ChandyLamport {
 
         this.resetSnapshot();
         System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
-        System.out.println("[SNAPSHOT PROCESS RESULT] "+resetMessage.message);
+        
+        // System.out.println("[SNAPSHOT PROCESS RESULT] "+resetMessage.message);
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
             SctpChannel channel = entry.getValue();
@@ -80,7 +81,7 @@ public class ChandyLamport {
     }
 
     public void receiveMarkerRejectionMessage(Message markerRejectionMsg) throws Exception {
-        System.out.println("[COLOR]: "+this.PROCESS_COLOR);
+        // System.out.println("[COLOR]: "+this.PROCESS_COLOR);
         this.markerRepliesReceived += 1;
         checkTreeCollapseStatus();
         System.out.println(String.format("[REJECTION ARRIVED] NODE:%d Rejected you marker message", markerRejectionMsg.senderId));
@@ -88,7 +89,7 @@ public class ChandyLamport {
     }
 
     public void receiveMarkerMessageFromParent(Message marker) throws Exception {
-        System.out.println("[COLOR]: "+this.PROCESS_COLOR);
+        // System.out.println("[COLOR]: "+this.PROCESS_COLOR);
 
         if (this.PROCESS_COLOR == ProcessColor.RED){
             Message rejectMarker = new Message();
@@ -132,12 +133,12 @@ public class ChandyLamport {
         markerStatus();
 
         checkTreeCollapseStatus();
-        System.out.println("[CHANNEL INPUT RESPONSE] MARKER_REPLY message is handled");
+        // System.out.println("[CHANNEL INPUT RESPONSE] MARKER_REPLY message is handled");
     };
 
     private void checkTreeCollapseStatus() throws Exception{
-        System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
-        markerStatus();
+        // System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
+        // markerStatus();
         if (this.markersSent == this.markerRepliesReceived) {
             
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);
@@ -145,7 +146,7 @@ public class ChandyLamport {
             this.gatheredMessagesReceived += this.m.node.messagesReveived;
 
             if (this.m.node.state == NodeState.ACTIVE){
-                System.out.println("[ALERT] Node is still active");
+                // System.out.println("[ALERT] Node is still active");
                 this.gatheredState = NodeState.ACTIVE;
             }
 
@@ -179,7 +180,7 @@ public class ChandyLamport {
     private void initiateSnapshotReset() throws Exception{
         System.out.println("[INITIATE] Initiating Snapshot Reset Process resetting snapshot states for all nodes");
         
-        this.resetSnapshot();
+        this.PROCESS_COLOR = ProcessColor.BLUE;
 
         Boolean TERMINATED = false;
 
@@ -188,8 +189,6 @@ public class ChandyLamport {
             SctpChannel channel = entry.getValue();
 
             String messageText;
-            
-
             if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
                 messageText = "**** SYSTEM IS NOT TERMINATED ****";
             } else {
@@ -203,16 +202,19 @@ public class ChandyLamport {
             }
         };
 
-        try {
-            System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
-            Thread.sleep(this.m.node.snapshotDelay);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        if (m.node.nodeId == 0 && TERMINATED){
+        this.resetSnapshot();
+
+        if (m.node.nodeId == 0 && !TERMINATED){
             System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
+            try {
+                System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
+                Thread.sleep(this.m.node.snapshotDelay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             this.initiateSpanning();
+        } else {
+            System.out.println("SNAPSHOT PROTOCOL DETECTED TERMINATION. NOT FURTHER SPANNING;");
         }
     }
 }
