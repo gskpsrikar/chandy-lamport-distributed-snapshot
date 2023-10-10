@@ -297,7 +297,7 @@ public class ChandyLamport {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            this.initiateSpanning();
+            // this.initiateSpanning();
         } else {
             System.out.println("SNAPSHOT PROTOCOL DETECTED TERMINATION. NOT FURTHER SPANNING;");
         }
