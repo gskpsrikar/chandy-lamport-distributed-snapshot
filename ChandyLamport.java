@@ -43,24 +43,21 @@ public class ChandyLamport {
         
         this.PROCESS_COLOR = ProcessColor.RED;
 
+        this.markerStatus();
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
-
-            Set<Integer> newVisited = new HashSet<>();
-            newVisited.add(m.node.nodeId);
             
             Message msg = new Message(m.node.nodeId); // MARKER Message Constructor
-            synchronized(m) {
-                Client.send_message(msg, channel, m);
-                this.markersSent+=1;
-            }
+            Client.send_message(msg, channel, m);
+            this.markersSent+=1;
         }
 
     }
 
     public void markerStatus(){
         System.out.println();
+        System.out.println("[PROCESS COLOR]: "+this.PROCESS_COLOR);
         System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Received=%d", this.markersSent, this.markerRepliesReceived));
         System.out.println();
     }
@@ -187,7 +184,7 @@ public class ChandyLamport {
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
-            
+
             String messageText;
             if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
                 messageText = "**** SYSTEM IS NOT TERMINATED ****";

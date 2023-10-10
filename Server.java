@@ -64,6 +64,7 @@ public class Server {
 
         // Response to MARKER sent to a RED process
         if (msg.messageType == MessageType.MARKER_REJECTION){
+            System.out.println("[CHANNEL INPUT] Received MARKER_REJECTION message from "+msg.senderId);
             this.m.snapshot.receiveMarkerRejectionMessage(msg);
         };
 

@@ -73,6 +73,7 @@ public class Main {
             public void run() {
                 try {
                     if (m.node.nodeId == 0){
+                        System.out.println("[TRACE] m.snapshot.initiateSpanning();");
                         m.snapshot.initiateSpanning();
                     }
                 } catch (Exception e) {
