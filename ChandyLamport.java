@@ -22,6 +22,9 @@ public class ChandyLamport {
     private int gatheredMessagesReceived = 0;
     private NodeState gatheredState;
 
+    private int demarkersSent = 0;
+    private int demarkerRepliesReceived = 0;
+
     public ChandyLamport(Main m){
         this.m = m;
         this.PROCESS_COLOR = ProcessColor.BLUE;
@@ -63,29 +66,29 @@ public class ChandyLamport {
         System.out.println();
     }
 
-    public void receiveSnapshotResetMessage(Message resetMessage) throws Exception{
-        if (this.PROCESS_COLOR == ProcessColor.BLUE){
-            System.out.println("[END_SNAPSHOT: rejected] Rejected END_SNAPSHOT at "+this.m.node.nodeId);
-            return;
-        }
+    // public void receiveSnapshotResetMessage(Message resetMessage) throws Exception{
+    //     if (this.PROCESS_COLOR == ProcessColor.BLUE){
+    //         System.out.println("[END_SNAPSHOT: rejected] Rejected END_SNAPSHOT at "+this.m.node.nodeId);
+    //         return;
+    //     }
 
-        this.resetSnapshot();
-        System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
+    //     this.resetSnapshot();
+    //     System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
 
-        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
-            if (entry.getKey() == 0 || resetMessage.parents.contains(entry.getKey())){
-                System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node "+entry.getKey());
-            }
-            SctpChannel channel = entry.getValue();
+    //     for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+    //         if (entry.getKey() == 0 || resetMessage.parents.contains(entry.getKey())){
+    //             System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node "+entry.getKey());
+    //         }
+    //         SctpChannel channel = entry.getValue();
 
-            Set<Integer> parents = new HashSet<>(resetMessage.parents);
-            parents.add(this.m.node.nodeId);
-            Message msg = new Message(resetMessage.message, parents); // RESET SNAPSHOT Message Constructor
-            synchronized(m) {
-                Client.send_message(msg, channel, m);
-            }
-        }
-    }
+    //         Set<Integer> parents = new HashSet<>(resetMessage.parents);
+    //         parents.add(this.m.node.nodeId);
+    //         Message msg = new Message(resetMessage.message, parents); // RESET SNAPSHOT Message Constructor
+    //         synchronized(m) {
+    //             Client.send_message(msg, channel, m);
+    //         }
+    //     }
+    // }
 
     public void receiveMarkerRejectionMessage(Message markerRejectionMsg) throws Exception {
         // System.out.println("[COLOR]: "+this.PROCESS_COLOR);
@@ -146,22 +149,18 @@ public class ChandyLamport {
 
     private void checkTreeCollapseStatus() throws Exception{
         // System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
-        if (this.markersSent == this.markerRepliesReceived) {
-            
+        if (this.markersSent == this.markerRepliesReceived) { 
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);
             this.gatheredMessagesSent += this.m.node.messagesSent;
             this.gatheredMessagesReceived += this.m.node.messagesReveived;
-
             if (this.m.node.state == NodeState.ACTIVE){
                 // System.out.println("[ALERT] Node is still active");
                 this.gatheredState = NodeState.ACTIVE;
             }
-
             if (this.m.node.nodeId == 0){
                 handleConvergence();
                 return;
             }
-
             Message markerReplyMsg = new Message(
                 this.m.node.nodeId, 
                 this.gatheredLocalSnapshots, 
@@ -169,7 +168,6 @@ public class ChandyLamport {
                 this.gatheredMessagesSent, 
                 this.gatheredMessagesReceived
             );
-
             Client.send_message(markerReplyMsg, this.m.idToChannelMap.get(this.parentId), this.m);
         };
     }
@@ -181,50 +179,127 @@ public class ChandyLamport {
         System.out.println("[CONVERGENCE] Total messages received = " + this.gatheredMessagesReceived);
         System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
 
-        this.initiateSnapshotReset();
+        this.initiateDemarkationProcess();
     }
 
-    private void initiateSnapshotReset() throws Exception{
-        System.out.println("[INITIATE] Initiating Snapshot Reset Process resetting snapshot states for all nodes");
-        
+    public void receiveDemarkerFromParent(Message demarker) throws Exception{
+        // TODO: To be done
+        if (this.PROCESS_COLOR == ProcessColor.BLUE){
+            Message rejectDemarker = new Message(this.m.node.nodeId, MessageType.DEMARKER);
+            SctpChannel channel = this.m.idToChannelMap.get(demarker.senderId);
+            Client.send_message(rejectDemarker, channel, this.m);
+            System.out.println(String.format("[DEMARKER REJECTED] DEMARKER message from NODE-%d is rejected.", demarker.senderId));
+            return;
+        }
+
         this.PROCESS_COLOR = ProcessColor.BLUE;
-
-        Boolean TERMINATED = false;
-
-        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
-
-            SctpChannel channel = entry.getValue();
-
-            String messageText;
-            if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
-                messageText = "**** SYSTEM IS NOT TERMINATED ****";
-            } else {
-                messageText = "**** YOU ARE TERMINATED ****";
-                TERMINATED = true;
-            }
-            
-            Set<Integer> parents = new HashSet<>();
-            parents.add(0);
-
-            Message msg = new Message(messageText, parents); // END_SNAPSHOT Message Constructor
-            synchronized(m) {
-                Client.send_message(msg, channel, m);
-            }
-        };
+        this.parentId = demarker.senderId;
 
         this.resetSnapshot();
 
-        if (m.node.nodeId == 0 && !TERMINATED){
-            System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
-            try {
-                System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
-                Thread.sleep(this.m.node.snapshotDelay);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+            SctpChannel channel = entry.getValue();
+            Message msg = new Message(this.m.node.nodeId, MessageType.DEMARKER); // DEMARKER Message Constructor
+            synchronized(m) {
+                Client.send_message(msg, channel, m);
+                this.demarkersSent++;
             }
-            this.initiateSpanning();
-        } else {
-            System.out.println("SNAPSHOT PROTOCOL DETECTED TERMINATION. NOT FURTHER SPANNING;");
+        }
+
+        System.out.println(String.format("[DEMARKER ACCEPTED] DEMARKER message from NODE-%d is accepted.", demarker.senderId));
+        // snapshotStatus();
+        checkTreeCollapseStatus();
+    }
+
+    public void receiveDemarkationRepliesFromChildren(Message demarkerReply) throws Exception{
+        // DONE
+        this.demarkerRepliesReceived++;
+        System.out.println("[DEMARKER REPLY ACCEPTED]");
+
+        checkDemarkationCollapse();
+    }
+
+    private void initiateDemarkationProcess() throws Exception {
+        // DONE
+        System.out.println("[INITIATE] Initiating Demarkation Spanning process at NODE: "+this.m.node.nodeId);
+        this.PROCESS_COLOR = ProcessColor.BLUE;
+        this.resetSnapshot();
+        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+            SctpChannel channel = entry.getValue();
+            Message demarker = new Message(this.m.node.nodeId, MessageType.DEMARKER); // DEMARKER Message Constructor
+            System.out.println("[TRACE] Sending MessageType of "+demarker.messageType+" to "+entry.getKey());
+            Client.send_message(demarker, channel, m);
+            this.demarkersSent+=1;
         }
     }
+
+    private void checkDemarkationCollapse() throws Exception {
+        // DONE
+        if (this.demarkersSent == this.demarkerRepliesReceived) {
+            if (this.m.node.nodeId == 0){
+                this.handleDemarkationConvergence();
+                return;
+            }
+            Message demarkerReplyMessage = new Message(this.m.node.nodeId, MessageType.DEMARKER_REPLY);
+            Client.send_message(demarkerReplyMessage, this.m.idToChannelMap.get(this.parentId), this.m);
+        };
+    }
+
+    private void handleDemarkationConvergence() throws Exception {
+        // DONE
+        System.out.println("--------------- DEMARKATION FINISHED --------------");
+        System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
+        Thread.sleep(this.m.node.snapshotDelay);
+        this.initiateSpanning();
+    }
+
+    public void receiveDemarkerRejectionMessage() throws Exception{
+        // DONE
+        this.demarkerRepliesReceived += 1;
+        this.checkDemarkationCollapse();
+    }
+
+    // private void initiateSnapshotReset() throws Exception{
+    //     System.out.println("[INITIATE] Initiating Snapshot Reset Process resetting snapshot states for all nodes");
+        
+    //     this.PROCESS_COLOR = ProcessColor.BLUE;
+
+    //     Boolean TERMINATED = false;
+
+    //     for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+
+    //         SctpChannel channel = entry.getValue();
+
+    //         String messageText;
+    //         if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
+    //             messageText = "**** SYSTEM IS NOT TERMINATED ****";
+    //         } else {
+    //             messageText = "**** YOU ARE TERMINATED ****";
+    //             TERMINATED = true;
+    //         }
+            
+    //         Set<Integer> parents = new HashSet<>();
+    //         parents.add(0);
+
+    //         /Message msg = new Message(messageText, parents); // END_SNAPSHOT Message Constructor
+    //         synchronized(m) {
+    //             Client.send_message(msg, channel, m);
+    //         }
+    //     };
+
+    //     this.resetSnapshot();
+
+    //     if (m.node.nodeId == 0 && !TERMINATED){
+    //         System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
+    //         try {
+    //             System.out.println(String.format("[SNAPSHOT PROCESS SLEEPING] Sleeping for %d(ms) seconds to allow other nodes wake other nodes...", this.m.node.snapshotDelay));
+    //             Thread.sleep(this.m.node.snapshotDelay);
+    //         } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //         }
+    //         this.initiateSpanning();
+    //     } else {
+    //         System.out.println("SNAPSHOT PROTOCOL DETECTED TERMINATION. NOT FURTHER SPANNING;");
+    //     }
+    // }
 }

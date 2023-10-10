@@ -76,10 +76,17 @@ public class Server {
             }
         };
 
-        if (msg.messageType == MessageType.END_SNAPSHOT){
-            System.out.println("[END_SNAPSHOT : received] Received END_SNAPSHOT message from "+msg.senderId);
-            this.m.snapshot.receiveSnapshotResetMessage(msg);
-        }
+        if (msg.messageType == MessageType.DEMARKER){
+            this.m.snapshot.receiveDemarkerFromParent(msg);
+        };
+
+        if (msg.messageType == MessageType.DEMARKER_REJECTION){
+            this.m.snapshot.receiveDemarkerRejectionMessage();
+        };
+
+        if (msg.messageType == MessageType.DEMARKER_REPLY){
+            this.m.snapshot.receiveDemarkationRepliesFromChildren(msg);
+        };
     }
 
     public void handleApplicationMessage(Message msg) {

@@ -9,7 +9,11 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-enum MessageType {APPLICATION, MARKER, MARKER_REPLY, MARKER_REJECTION, END_SNAPSHOT};
+enum MessageType {
+	APPLICATION, 
+	MARKER, MARKER_REPLY, MARKER_REJECTION, 
+	DEMARKER, DEMARKER_REPLY, DEMARKER_REJECTION
+};
 
 public class Message implements Serializable 
 {
@@ -52,10 +56,9 @@ public class Message implements Serializable
 		this.messagesReceived = messagesReceived;
 	}
 
-	public Message(String messageText, Set<Integer> parents){
-		this.messageType = MessageType.END_SNAPSHOT; // END_SNAPSHOT message
-		this.message = messageText;
-		this.parents = parents;
+	public Message(int senderId, MessageType messageType){
+		this.senderId = senderId;
+		this.messageType = messageType;
 	}
 
 	// Convert current instance of Message to ByteBuffer in order to send message over SCTP
