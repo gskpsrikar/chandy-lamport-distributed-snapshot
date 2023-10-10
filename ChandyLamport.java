@@ -41,8 +41,8 @@ public class ChandyLamport {
         
         this.PROCESS_COLOR = ProcessColor.RED;
 
-        this.markerStatus();
-        System.out.println("[TRACE] Channels are "+m.idToChannelMap);
+        this.snapshotStatus();
+        // System.out.println("[TRACE] Channels are "+m.idToChannelMap);
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
@@ -54,7 +54,7 @@ public class ChandyLamport {
         }
     }
 
-    public void markerStatus(){
+    public void snapshotStatus(){
         System.out.println();
         System.out.println("[PROCESS COLOR]: "+this.PROCESS_COLOR);
         System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Received=%d", this.markersSent, this.markerRepliesReceived));
@@ -96,7 +96,7 @@ public class ChandyLamport {
             SctpChannel channel = this.m.idToChannelMap.get(marker.senderId);
             Client.send_message(rejectMarker, channel, this.m);
             System.out.println(String.format("[MARKER REJECTED] MARKER message from NODE-%d is rejected.", marker.senderId));
-            markerStatus();
+            // snapshotStatus();
             return;
         }
 
@@ -114,7 +114,7 @@ public class ChandyLamport {
         }
 
         System.out.println(String.format("[MARKER ACCEPTED] MARKER message from NODE-%d is accepted.", marker.senderId));
-        markerStatus();
+        // snapshotStatus();
         checkTreeCollapseStatus();
     }
 
@@ -130,7 +130,8 @@ public class ChandyLamport {
         }
 
         this.markerRepliesReceived++;
-        markerStatus();
+        System.out.println("[MARKER REPLY ACCEPTED]");
+        // snapshotStatus();
 
         checkTreeCollapseStatus();
         // System.out.println("[CHANNEL INPUT RESPONSE] MARKER_REPLY message is handled");
@@ -138,7 +139,6 @@ public class ChandyLamport {
 
     private void checkTreeCollapseStatus() throws Exception{
         // System.out.println("[COLLAPSE] Tree collapse identified at NODE:"+this.m.node.nodeId);
-        // markerStatus();
         if (this.markersSent == this.markerRepliesReceived) {
             
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);

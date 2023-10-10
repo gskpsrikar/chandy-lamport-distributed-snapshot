@@ -57,26 +57,27 @@ public class Server {
         // Receiving a MARKER message
         if (msg.messageType == MessageType.MARKER){
             synchronized (m){
-                System.out.println("[MARKER RECEIVED] Received MARKER message from NODE: "+msg.senderId);
+                System.out.println("[MARKER : received] Received MARKER message from NODE: "+msg.senderId);
                 this.m.snapshot.receiveMarkerMessageFromParent(msg);
             }
         };
 
         // Response to MARKER sent to a RED process
         if (msg.messageType == MessageType.MARKER_REJECTION){
-            System.out.println("[CHANNEL INPUT] Received MARKER_REJECTION message from "+msg.senderId);
+            System.out.println("[MARKER_REJECTION : received] Received MARKER_REJECTION message from "+msg.senderId);
             this.m.snapshot.receiveMarkerRejectionMessage(msg);
         };
 
         // Received from children in the collapse process
         if (msg.messageType == MessageType.MARKER_REPLY){
                 synchronized (m){
-                System.out.println("[CHANNEL INPUT] Received MARKER_REPLY message from "+msg.senderId);
+                System.out.println("[MARKER_REPLY : received] Received MARKER_REPLY message from "+msg.senderId);
                 this.m.snapshot.receiveMarkerRepliesFromChildren(msg);
             }
         };
 
         if (msg.messageType == MessageType.END_SNAPSHOT){
+            System.out.println("[END_SNAPSHOT : received] Received MARKER_REPLY message from "+msg.senderId);
             this.m.snapshot.receiveSnapshotResetMessage(msg);
         }
     }
@@ -84,16 +85,12 @@ public class Server {
     public void handleApplicationMessage(Message msg) {
         // This method updates the vector clock on receiving an application message
         synchronized (m) {
-            
             wakeNodeIfPassive(msg);
-
             for (int i=0; i<m.node.numberOfNodes; i++){
                 int value = Math.max(m.node.clock.get(i), msg.clock.get(i));
                 m.node.clock.set(i, value);
             }
-
             m.node.messagesReveived += 1;
-
             // System.out.println("Vector clock on receiving= "+ m.node.clock+" | Messages received = "+m.node.messagesReveived);
         }
     }
