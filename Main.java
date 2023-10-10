@@ -92,7 +92,7 @@ public class Main {
         // };
         // snapshotThread.start();
         try {
-            Thread.sleep(5);
+            Thread.sleep(8000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
