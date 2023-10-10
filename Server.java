@@ -77,7 +77,7 @@ public class Server {
         };
 
         if (msg.messageType == MessageType.END_SNAPSHOT){
-            System.out.println("[END_SNAPSHOT : received] Received MARKER_REPLY message from "+msg.senderId);
+            System.out.println("[END_SNAPSHOT : received] Received END_SNAPSHOT message from "+msg.senderId);
             this.m.snapshot.receiveSnapshotResetMessage(msg);
         }
     }

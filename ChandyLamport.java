@@ -88,7 +88,7 @@ public class ChandyLamport {
         // System.out.println("[COLOR]: "+this.PROCESS_COLOR);
         this.markerRepliesReceived += 1;
         checkTreeCollapseStatus();
-        System.out.println(String.format("[REJECTION ARRIVED] NODE:%d Rejected you marker message", markerRejectionMsg.senderId));
+        // System.out.println(String.format("[REJECTION ARRIVED] NODE:%d Rejected you marker message", markerRejectionMsg.senderId));
 
     }
 
