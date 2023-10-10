@@ -91,6 +91,11 @@ public class Main {
         //     }
         // };
         // snapshotThread.start();
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (m.node.nodeId == 0){
             m.snapshot.initiateSpanning();
             System.out.println("Chandy Lamport protocol initiated");
