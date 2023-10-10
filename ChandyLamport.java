@@ -10,16 +10,16 @@ enum ProcessColor {BLUE, RED};
 
 public class ChandyLamport {
     public Main m;
-    public Integer parentId;
+    public int parentId;
 
-    public Integer markersSent=0;
-    public Integer markerRepliesReceived=0;
+    public int markersSent=0;
+    public int markerRepliesReceived=0;
     
     public ProcessColor PROCESS_COLOR;
 
     private Map<Integer, Vector<Integer>> gatheredLocalSnapshots = new HashMap<>();
-    private Integer gatheredMessagesSent = 0;
-    private Integer gatheredMessagesReceived = 0;
+    private int gatheredMessagesSent = 0;
+    private int gatheredMessagesReceived = 0;
     private NodeState gatheredState;
 
     public ChandyLamport(Main m){

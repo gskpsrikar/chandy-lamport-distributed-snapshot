@@ -16,11 +16,11 @@ public class Message implements Serializable
 	public MessageType messageType;
 	public String message;
 	public Vector<Integer> clock;
-	public int senderId;
+	public int senderId = -1;
 	public Map<Integer, Vector<Integer>> localSnapshots;
 	public NodeState state;
-	public Integer messagesSent;
-	public Integer messagesReceived;
+	public int messagesSent;
+	public int messagesReceived;
 	public Set<Integer> parents;
 	
 	public Message(int senderId, Vector<Integer> timestamp, String message)
