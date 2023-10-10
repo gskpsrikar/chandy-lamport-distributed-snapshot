@@ -21,7 +21,7 @@ public class Server {
 
         while(true) { // ssc.isOpen() is equivalent to 'true' in this case
             SctpChannel sc = ssc.accept();
-            System.out.println("Client Connected");
+            // System.out.println("Client Connected");
 
             Thread listener = new Thread() {
                 public void run(){
@@ -93,8 +93,7 @@ public class Server {
 
             m.node.messagesReveived += 1;
 
-            System.out.println("Vector clock on receiving= "+ m.node.clock+" | Messages received = "+m.node.messagesReveived);
-
+            // System.out.println("Vector clock on receiving= "+ m.node.clock+" | Messages received = "+m.node.messagesReveived);
         }
     }
 

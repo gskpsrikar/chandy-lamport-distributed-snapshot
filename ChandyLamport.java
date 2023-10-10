@@ -39,6 +39,8 @@ public class ChandyLamport {
     }
 
     public void initiateSpanning() throws Exception {
+        System.out.println("[INITIATE] Initiating Snapshot Spanning process at NODE: "+this.m.node.nodeId);
+        
         this.PROCESS_COLOR = ProcessColor.RED;
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
@@ -178,12 +180,14 @@ public class ChandyLamport {
     }
 
     private void initiateSnapshotReset() throws Exception{
+        System.out.println("[INITIATE] Initiating Snapshot Reset Process resetting snapshot states for all nodes");
+        
         this.resetSnapshot();
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
-
+            
             String messageText;
             if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
                 messageText = "**** SYSTEM IS NOT TERMINATED ****";

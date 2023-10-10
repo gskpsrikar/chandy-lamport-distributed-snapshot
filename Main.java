@@ -68,7 +68,7 @@ public class Main {
     }
 
     private void initateChandyLamportSnapshot(Main m){
-        // System.out.println("Initiating snapshot thread...");
+        System.out.println("Initiating snapshot thread...");
         Thread snapshot = new Thread() {
             public void run() {
                 try {
@@ -81,6 +81,6 @@ public class Main {
             }
         };
         snapshot.start();
-        // System.out.println("Chandy Lamport protocol initiated");
+        System.out.println("Chandy Lamport protocol initiated");
     }
 }

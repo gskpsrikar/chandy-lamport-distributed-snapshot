@@ -19,7 +19,7 @@ public class Client {
     }
 
     private List<SctpChannel> buildChannels(Node node) {
-        System.out.println("Creating channels for neighboring nodes....");
+        // System.out.println("Creating channels for neighboring nodes....");
         List<SctpChannel> channelList = new ArrayList<>();
 
         for (List<String> neighbor: node.neighbors) {
@@ -39,7 +39,7 @@ public class Client {
                 e.printStackTrace();
             }
         }
-        System.out.println("Number of channels created = " + channelList.size());
+        // System.out.println("Number of channels created = " + channelList.size());
         return channelList;
     }
 
@@ -123,9 +123,9 @@ public class Client {
 
             m.node.clock.set(m.node.nodeId, prevEntry+1);
 
-            System.out.println(String.format("[DEBUG][Node:%d] (%d) After sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
-
             m.node.messagesSent ++;
+
+            System.out.println(String.format("[DEBUG][Node:%d] (%d) After sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
         }
     }
 }
