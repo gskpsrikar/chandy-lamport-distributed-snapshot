@@ -64,7 +64,7 @@ public class Client {
                 }
             }
         };
-        System.out.println("Exiting sendLogic() method.");
+        // System.out.println("Exiting sendLogic() method.");
     }
 
     public void sendBatchMessages(int count) throws Exception{
@@ -101,7 +101,9 @@ public class Client {
             }
         }
         // System.out.println("[STATE CHANGE] Flipping node state from active to passive because a batch of messages are sent to neighbors.");
+        System.out.println(String.format("[DEBUG][Node:%d] (%d) After sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
         m.node.flipState();
+        
     }
 
     public static void send_message(Message msg, SctpChannel channel, Main m) throws Exception {
@@ -123,8 +125,6 @@ public class Client {
             m.node.clock.set(m.node.nodeId, prevEntry+1);
 
             m.node.messagesSent ++;
-
-            System.out.println(String.format("[DEBUG][Node:%d] (%d) After sending: ", m.node.nodeId, m.node.messagesSent) + m.node.clock);
         }
     }
 }

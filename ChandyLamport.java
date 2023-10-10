@@ -63,6 +63,7 @@ public class ChandyLamport {
 
     public void receiveSnapshotResetMessage(Message resetMessage) throws Exception{
         if (this.PROCESS_COLOR == ProcessColor.BLUE){
+            System.out.println("[END_SNAPSHOT: rejected] Rejected END_SNAPSHOT at "+this.m.node.nodeId);
             return;
         }
 
@@ -72,6 +73,9 @@ public class ChandyLamport {
         // System.out.println("[SNAPSHOT PROCESS RESULT] "+resetMessage.message);
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+            if (entry.getKey() == 0){
+                System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node 0.");
+            }
             SctpChannel channel = entry.getValue();
             Message msg = new Message(resetMessage.message); // RESET SNAPSHOT Message Constructor
             synchronized(m) {
