@@ -118,7 +118,7 @@ public class ChandyLamport {
             
             this.gatheredLocalSnapshots.put(this.m.node.nodeId, m.node.clock);
             this.gatheredMessagesSent += this.m.node.messagesSent;
-            this.gatheredMessagesReceived += this.gatheredMessagesReceived;
+            this.gatheredMessagesReceived += this.m.node.messagesReveived;
 
             if (this.m.node.state == NodeState.ACTIVE){
                 System.out.println("[ALERT] Node is still active");
