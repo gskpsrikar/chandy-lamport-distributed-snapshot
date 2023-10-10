@@ -18,10 +18,9 @@ public class Client {
         }
     }
 
-    private List<SctpChannel> buildChannels(Node node) {
+    public List<SctpChannel> buildChannels(Node node) {
         // System.out.println("Creating channels for neighboring nodes....");
         List<SctpChannel> channelList = new ArrayList<>();
-
         for (List<String> neighbor: node.neighbors) {
             String neighbor_name = neighbor.get(0);
             int port = Integer.parseInt(neighbor.get(1));

@@ -30,24 +30,27 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
         m.initiateClientThread(m);
+        
         m.initateChandyLamportSnapshot(m);
     }
 
-    public void initiateClientThread(Main m) {
+    public void initiateClientThread(Main m) throws Exception {
         // System.out.println("Intiating sender(client) thread...");
-        Thread sender = new Thread() {
+        Client s1 = new Client(m);
+
+        // s1.buildChannels(m.node);
+        
+        Thread clientThread = new Thread() {
             public void run() {
                 try {
-                    Client s1 = new Client(m);
                     s1.sendApplicationMessageLogic();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             };
         };
-        sender.start();
+        clientThread.start();
         // System.out.println("Sender(client) initiated");
     }
 

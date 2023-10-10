@@ -42,6 +42,7 @@ public class ChandyLamport {
         this.PROCESS_COLOR = ProcessColor.RED;
 
         this.markerStatus();
+        System.out.println("[TRACE] Channels are "+m.idToChannelMap);
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
