@@ -1,12 +1,13 @@
-3 6 10 200 3000 10
+4 6 10 200 3000 50
 # n, minPerActive, maxPerActive, minSendDelay, snapshotDelay, maxNumber
 
 0 dc02 12234 # This is line 1
 1 dc03 34321
 2 dc04 23465
-# 3 dc05 5555
+3 dc05 5555
 # 4 dc06 6666
 
 1 2 # This is the adj list
 0 2
-0 1
+0 1 3
+2
