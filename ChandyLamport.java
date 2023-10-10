@@ -71,7 +71,7 @@ public class ChandyLamport {
 
         this.resetSnapshot();
         System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
-        
+
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
             if (entry.getKey() == 0 || resetMessage.parents.contains(entry.getKey())){
                 System.out.println("[REFRAIN] Refraining from sending end snapshot message to Node "+entry.getKey());
@@ -222,7 +222,7 @@ public class ChandyLamport {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            // this.initiateSpanning();
+            this.initiateSpanning();
         } else {
             System.out.println("SNAPSHOT PROTOCOL DETECTED TERMINATION. NOT FURTHER SPANNING;");
         }
