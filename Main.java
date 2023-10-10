@@ -38,6 +38,12 @@ public class Main {
     public void initiateClientThread(Main m) throws Exception {
         // System.out.println("Intiating sender(client) thread...");
         Client s1 = new Client(m);
+        try {
+            System.out.println("Sleeping for 10 seconds to allow other clients to setup channels...");
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // s1.buildChannels(m.node);
         
