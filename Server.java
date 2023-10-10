@@ -86,8 +86,11 @@ public class Server {
                 int value = Math.max(m.node.clock.get(i), msg.clock.get(i));
                 m.node.clock.set(i, value);
             }
-            System.out.println("Vector clock on receiving: "+ m.node.clock);
+
             m.node.messagesReveived += 1;
+
+            System.out.println("Vector clock on receiving= "+ m.node.clock+" | Messages received = "+m.node.messagesReveived);
+
         }
     }
 

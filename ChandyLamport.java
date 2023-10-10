@@ -121,6 +121,7 @@ public class ChandyLamport {
             this.gatheredMessagesReceived += this.gatheredMessagesReceived;
 
             if (this.m.node.state == NodeState.ACTIVE){
+                System.out.println("[ALERT] Node is still active");
                 this.gatheredState = NodeState.ACTIVE;
             }
 
