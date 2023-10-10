@@ -39,7 +39,7 @@ public class Main {
         // System.out.println("Intiating sender(client) thread...");
         Client s1 = new Client(m);
         try {
-            System.out.println("Sleeping for 10 seconds to allow other clients to setup channels...");
+            System.out.println("Sleeping for 5 seconds to allow other clients to setup channels...");
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();

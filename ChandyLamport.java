@@ -172,6 +172,7 @@ public class ChandyLamport {
         System.out.println("[CONVERGENCE] Total messages sent = " + this.gatheredMessagesSent);
         System.out.println("[CONVERGENCE] Total messages received = " + this.gatheredMessagesReceived);
         System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
+
         this.initiateSnapshotReset();
     }
 
@@ -180,15 +181,20 @@ public class ChandyLamport {
         
         this.resetSnapshot();
 
+        Boolean TERMINATED = false;
+
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
 
             String messageText;
+            
+
             if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
                 messageText = "**** SYSTEM IS NOT TERMINATED ****";
             } else {
                 messageText = "**** YOU ARE TERMINATED ****";
+                TERMINATED = true;
             }
 
             Message msg = new Message(messageText); // END_SNAPSHOT Message Constructor
@@ -203,9 +209,9 @@ public class ChandyLamport {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
-
-        if (m.node.nodeId == 0){
+        
+        if (m.node.nodeId == 0 && TERMINATED){
+            System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
             this.initiateSpanning();
         }
     }
