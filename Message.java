@@ -11,7 +11,8 @@ import java.io.ByteArrayOutputStream;
 
 enum MessageType {
 	APPLICATION, 
-	MARKER, MARKER_REPLY, MARKER_REJECTION, 
+	MARKER, MARKER_REPLY, MARKER_REJECTION,
+	END_SNAPSHOT, 
 	DEMARKER, DEMARKER_REPLY, DEMARKER_REJECTION
 };
 
@@ -56,10 +57,15 @@ public class Message implements Serializable
 		this.messagesReceived = messagesReceived;
 	}
 
-	public Message(int senderId, MessageType messageType){
-		this.senderId = senderId;
-		this.messageType = messageType;
+	public Message(String message, Set<Integer> parents){
+		this.message = message;
+		this.parents = parents;
 	}
+
+	// public Message(int senderId, MessageType messageType){
+	// 	this.senderId = senderId;
+	// 	this.messageType = messageType;
+	// }
 
 	// Convert current instance of Message to ByteBuffer in order to send message over SCTP
 	public byte[] toMessageBytes() throws Exception
