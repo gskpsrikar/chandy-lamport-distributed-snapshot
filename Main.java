@@ -32,7 +32,6 @@ public class Main {
         }
         
         m.initiateClientThread(m);
-
         m.initateChandyLamportSnapshot(m);
     }
 

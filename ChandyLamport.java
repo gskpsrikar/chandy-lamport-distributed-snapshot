@@ -178,14 +178,11 @@ public class ChandyLamport {
     }
 
     private void initiateSnapshotReset() throws Exception{
-        this.PROCESS_COLOR = ProcessColor.BLUE;
+        this.resetSnapshot();
 
         for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
 
             SctpChannel channel = entry.getValue();
-
-            Set<Integer> newVisited = new HashSet<>();
-            newVisited.add(m.node.nodeId);
 
             String messageText;
             if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
@@ -193,11 +190,10 @@ public class ChandyLamport {
             } else {
                 messageText = "**** YOU ARE TERMINATED ****";
             }
-            
+
             Message msg = new Message(messageText); // END_SNAPSHOT Message Constructor
             synchronized(m) {
                 Client.send_message(msg, channel, m);
-                this.markersSent+=1;
             }
         };
 
@@ -208,6 +204,9 @@ public class ChandyLamport {
             e.printStackTrace();
         }
         System.out.println("[SNAPSHOT START] Initiating new Snapshot Process.");
-        initiateSpanning();
+
+        if (m.node.nodeId == 0){
+            this.initiateSpanning();
+        }
     }
 }

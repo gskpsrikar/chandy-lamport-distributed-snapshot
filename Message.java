@@ -51,7 +51,7 @@ public class Message implements Serializable
 	}
 
 	public Message(String messageText){
-		this.messageType = MessageType.END_SNAPSHOT;
+		this.messageType = MessageType.END_SNAPSHOT; // END_SNAPSHOT message
 		this.message = messageText;
 	}
 
