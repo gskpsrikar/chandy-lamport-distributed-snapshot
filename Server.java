@@ -74,6 +74,10 @@ public class Server {
                 this.m.snapshot.receiveMarkerRepliesFromChildren(msg);
             }
         };
+
+        if (msg.messageType == MessageType.END_SNAPSHOT){
+            this.m.snapshot.receiveSnapshotResetMessage(msg);
+        }
     }
 
     public void handleApplicationMessage(Message msg) {

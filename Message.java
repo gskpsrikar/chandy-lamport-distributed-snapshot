@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-enum MessageType {APPLICATION, MARKER, MARKER_REPLY, MARKER_REJECTION};
+enum MessageType {APPLICATION, MARKER, MARKER_REPLY, MARKER_REJECTION, END_SNAPSHOT};
 
 public class Message implements Serializable 
 {
@@ -48,6 +48,11 @@ public class Message implements Serializable
 		this.state = state;
 		this.messagesSent = messagesSent;
 		this.messagesReceived = messagesReceived;
+	}
+
+	public Message(String messageText){
+		this.messageType = MessageType.END_SNAPSHOT;
+		this.message = messageText;
 	}
 
 	// Convert current instance of Message to ByteBuffer in order to send message over SCTP

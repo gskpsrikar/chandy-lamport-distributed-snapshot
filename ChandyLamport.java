@@ -10,7 +10,6 @@ enum ProcessColor {BLUE, RED};
 
 public class ChandyLamport {
     public Main m;
-    public Set<Integer> visited;
     public Integer parentId;
 
     public Integer markersSent=0;
@@ -21,13 +20,22 @@ public class ChandyLamport {
     private Map<Integer, Vector<Integer>> gatheredLocalSnapshots = new HashMap<>();
     private Integer gatheredMessagesSent = 0;
     private Integer gatheredMessagesReceived = 0;
-
     private NodeState gatheredState;
 
     public ChandyLamport(Main m){
         this.m = m;
         this.PROCESS_COLOR = ProcessColor.BLUE;
         this.gatheredState = NodeState.PASSIVE;
+    }
+
+    private void resetSnapshot(){
+        this.markersSent = 0;
+        this.markerRepliesReceived = 0;
+        this.PROCESS_COLOR = ProcessColor.BLUE;
+        this.gatheredState = NodeState.PASSIVE;
+        this.gatheredLocalSnapshots = new HashMap<>();
+        this.gatheredMessagesSent = 0;
+        this.gatheredMessagesReceived = 0;
     }
 
     public void initiateSpanning() throws Exception {
@@ -53,6 +61,24 @@ public class ChandyLamport {
         System.out.println();
         System.out.println(String.format("[SNAPSHOT DEBUG] MARKERS Sent=%d | REPLIES Received=%d", this.markersSent, this.markerRepliesReceived));
         System.out.println();
+    }
+
+    public void receiveSnapshotResetMessage(Message resetMessage) throws Exception{
+        if (this.PROCESS_COLOR == ProcessColor.BLUE){
+            return;
+        }
+
+        this.resetSnapshot();
+        System.out.println("[RESET SNAPSHOT] This node is set to BLUE");
+        System.out.println("[SNAPSHOT PROCESS RESULT] "+resetMessage.message);
+
+        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+            SctpChannel channel = entry.getValue();
+            Message msg = new Message(resetMessage.message); // RESET SNAPSHOT Message Constructor
+            synchronized(m) {
+                Client.send_message(msg, channel, m);
+            }
+        }
     }
 
     public void receiveMarkerRejectionMessage(Message markerRejectionMsg) throws Exception {
@@ -142,11 +168,37 @@ public class ChandyLamport {
         };
     }
 
-    private void handleConvergence(){
+    private void handleConvergence() throws Exception{
         System.out.println("[CONVERGENCE] Euler Traversal successfully completed at node 0.");
         System.out.println("[CONVERGENCE] Local Snapshots = " + this.gatheredLocalSnapshots);
         System.out.println("[CONVERGENCE] Total messages sent = " + this.gatheredMessagesSent);
         System.out.println("[CONVERGENCE] Total messages received = " + this.gatheredMessagesReceived);
         System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
+        this.initiateSnapshotReset();
+    }
+
+    private void initiateSnapshotReset() throws Exception{
+        this.PROCESS_COLOR = ProcessColor.BLUE;
+
+        for (Map.Entry<Integer, SctpChannel> entry : m.idToChannelMap.entrySet()) {
+
+            SctpChannel channel = entry.getValue();
+
+            Set<Integer> newVisited = new HashSet<>();
+            newVisited.add(m.node.nodeId);
+
+            String messageText;
+            if (this.gatheredState == NodeState.ACTIVE || this.gatheredMessagesSent != this.gatheredMessagesReceived){
+                messageText = "**** SYSTEM IS NOT TERMINATED ****";
+            } else {
+                messageText = "**** YOU ARE TERMINATED ****";
+            }
+            
+            Message msg = new Message(messageText); // END_SNAPSHOT Message Constructor
+            synchronized(m) {
+                Client.send_message(msg, channel, m);
+                this.markersSent+=1;
+            }
+        };
     }
 }
