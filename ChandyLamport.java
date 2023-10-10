@@ -1,7 +1,5 @@
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import com.sun.nio.sctp.SctpChannel;
@@ -49,10 +47,10 @@ public class ChandyLamport {
             SctpChannel channel = entry.getValue();
             
             Message msg = new Message(m.node.nodeId); // MARKER Message Constructor
+            System.out.println("[TRACE] Sending MessageType of "+msg.messageType+" to "+entry.getKey());
             Client.send_message(msg, channel, m);
             this.markersSent+=1;
         }
-
     }
 
     public void markerStatus(){

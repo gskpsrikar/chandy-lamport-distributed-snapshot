@@ -16,7 +16,7 @@ public class Main {
         node.state = NodeState.ACTIVE;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         Main m = new Main();
 
@@ -67,21 +67,24 @@ public class Main {
         // System.out.println("Listener(server) initiated");
     }
 
-    private void initateChandyLamportSnapshot(Main m){
-        System.out.println("Initiating snapshot thread...");
-        Thread snapshot = new Thread() {
-            public void run() {
-                try {
-                    if (m.node.nodeId == 0){
-                        System.out.println("[TRACE] m.snapshot.initiateSpanning();");
-                        m.snapshot.initiateSpanning();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }                
-            }
-        };
-        snapshot.start();
-        System.out.println("Chandy Lamport protocol initiated");
+    private void initateChandyLamportSnapshot(Main m) throws Exception{
+        // System.out.println("Initiating snapshot thread...");
+        // Thread snapshotThread = new Thread() {
+        //     public void run() {
+        //         try {
+        //             if (m.node.nodeId == 0){
+        //                 System.out.println("Chandy Lamport protocol initiated");
+        //                 m.snapshot.initiateSpanning();
+        //             }
+        //         } catch (Exception e) {
+        //             e.printStackTrace();
+        //         }                
+        //     }
+        // };
+        // snapshotThread.start();
+        if (m.node.nodeId == 0){
+            m.snapshot.initiateSpanning();
+            System.out.println("Chandy Lamport protocol initiated");
+        }   
     }
 }
