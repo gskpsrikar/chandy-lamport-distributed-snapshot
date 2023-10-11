@@ -6,7 +6,7 @@
 # WARNING: this will delete all class files and output files in the folder
 
 # [CHANGE THIS to remove files from your project as is relevant to your language]
-rm *.class      # removes java class files
-rm *.out        # removes output files
+rm -rf *.class      # removes java class files
+rm -rf ../*.out        # removes output files
 
 echo done cleaning files
