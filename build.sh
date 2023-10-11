@@ -7,6 +7,7 @@
 
 # compilation command [CHANGE THIS to match your project files]
 bash cleanup.sh
+bash cleanFiles.sh
 git reset --hard HEAD
 git pull
 javac Main.java

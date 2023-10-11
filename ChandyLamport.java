@@ -157,6 +157,9 @@ public class ChandyLamport {
                 // System.out.println("[ALERT] Node is still active");
                 this.gatheredState = NodeState.ACTIVE;
             }
+
+            Helper.writeOutput(this.m.node.nodeId, this.m.node.clock);
+
             if (this.m.node.nodeId == 0){
                 handleConvergence();
                 return;
@@ -169,7 +172,6 @@ public class ChandyLamport {
                 this.gatheredMessagesReceived
             );
             Client.send_message(markerReplyMsg, this.m.idToChannelMap.get(this.parentId), this.m);
-            Helper.writeOutput(this.m.node.nodeId, this.m.node.clock);
         };
 
     }
