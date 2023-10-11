@@ -35,7 +35,7 @@ public class Helper {
         if (consistent){
             System.out.println("**************** CONSISTENCY VERIFIED ****************");
         } else {
-            System.out.println("**************** CONSISTENCY FAILED ****************")
+            System.out.println("**************** CONSISTENCY FAILED ****************");
         }
     }
 
