@@ -169,7 +169,9 @@ public class ChandyLamport {
                 this.gatheredMessagesReceived
             );
             Client.send_message(markerReplyMsg, this.m.idToChannelMap.get(this.parentId), this.m);
+            Helper.writeOutput(this.m.node.nodeId, this.m.node.clock);
         };
+
     }
 
     private void handleConvergence() throws Exception{
@@ -178,6 +180,7 @@ public class ChandyLamport {
         System.out.println("[CONVERGENCE] Total messages sent = " + this.gatheredMessagesSent);
         System.out.println("[CONVERGENCE] Total messages received = " + this.gatheredMessagesReceived);
         System.out.println("[CONVERGENCE] Node state gathered = " + this.gatheredState);
+        Helper.verifyConsistency(this.gatheredLocalSnapshots, this.m.node.numberOfNodes);
         this.initiateSnapshotReset();
         // this.initiateDemarkationProcess();
     }
