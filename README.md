@@ -1,5 +1,11 @@
-# distributed-systems-project-1
-This is my repository for the first project of CS6378 Advanced Operating Systems.
+# Distributed Systems Project-1: Chandy-Lamport Global Snapshot Protocol
+This project implements a distributed system consisting of n nodes, numbered 0 to n − 1, arranged in a certain topology. The topology and information about other parameters are provided in a configuration file.
+
+- All channels in the system are bidirectional.
+- All channels are implemented using SCTP protocol and satisfy FIFO property.
+- The socket connections are created at the beginning of the program and will stay intact until the end of the program.
+
+The nodes are setup on the UTD's Computer Science Department cluster.
 
 ## Frequently used Linux commands
 #### SSH into control node from MobaXterm:
